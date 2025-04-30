@@ -48,7 +48,9 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: Dockerfile
+    volumes:
+      - ./api:/app
+    dockerfile: Dockerfile
     container_name: ualg_api
     restart: unless-stopped
     env_file:
