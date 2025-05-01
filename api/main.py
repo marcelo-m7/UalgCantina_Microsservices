@@ -87,18 +87,18 @@ def get_me(user: dict = Depends(get_current_user)):
 # ---------------------
 # Redireciona para Google Auth (com state = redirect)
 # ---------------------
-@app.get("/login")
-def google_login(redirect: str = DEFAULT_REDIRECT):
-    params = urlencode({
-        "client_id": GOOGLE_CLIENT_ID,
-        "redirect_uri": "http://localhost:8000/callback",
-        "response_type": "code",
-        "scope": "openid email profile",
-        "access_type": "offline",
-        "prompt": "consent",
-        "state": redirect  # redirecionamento original
-    })
-    return RedirectResponse(f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
+# @app.get("/login")
+# def google_login(redirect: str = DEFAULT_REDIRECT):
+#     params = urlencode({
+#         "client_id": GOOGLE_CLIENT_ID,
+#         "redirect_uri": "http://localhost:8000/callback",
+#         "response_type": "code",
+#         "scope": "openid email profile",
+#         "access_type": "offline",
+#         "prompt": "consent",
+#         "state": redirect  # redirecionamento original
+#     })
+#     return RedirectResponse(f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
 
 
 # ---------------------
