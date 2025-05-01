@@ -1,4 +1,3 @@
-ualg_cantina_web
 # Miscellaneous
 *.class
 *.lock
@@ -7,8 +6,8 @@ ualg_cantina_web
 *.swp
 .buildlog/
 .history
-ualg_cantina_web
-web/
+.vscode
+.dart_tool
 
 # Flutter repo-specific
 /bin/cache/
