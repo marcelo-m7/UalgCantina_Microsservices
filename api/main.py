@@ -67,7 +67,7 @@ def get_weekly_menu(session: Session = Depends(get_session)):
 
 
 # ---------------------
-# Autenticação com ID Token (opcional)
+# Login direto com id_token do frontend
 # ---------------------
 @app.post("/login")
 def login(id_token: str):
@@ -85,24 +85,24 @@ def get_me(user: dict = Depends(get_current_user)):
 
 
 # ---------------------
-# Redireciona para Google Auth (com state = redirect)
+# Início do login via navegador com redirecionamento
 # ---------------------
-# @app.get("/login")
-# def google_login(redirect: str = DEFAULT_REDIRECT):
-#     params = urlencode({
-#         "client_id": GOOGLE_CLIENT_ID,
-#         "redirect_uri": "http://localhost:8000/callback",
-#         "response_type": "code",
-#         "scope": "openid email profile",
-#         "access_type": "offline",
-#         "prompt": "consent",
-#         "state": redirect  # redirecionamento original
-#     })
-#     return RedirectResponse(f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
+@app.get("/login")
+def google_login(redirect: str = DEFAULT_REDIRECT):
+    params = urlencode({
+        "client_id": GOOGLE_CLIENT_ID,
+        "redirect_uri": "http://localhost:8000/callback",
+        "response_type": "code",
+        "scope": "openid email profile",
+        "access_type": "offline",
+        "prompt": "consent",
+        "state": redirect  # redirecionamento original
+    })
+    return RedirectResponse(f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
 
 
 # ---------------------
-# Callback do Google OAuth
+# Callback do Google OAuth 2.0 (troca de código por id_token)
 # ---------------------
 @app.get("/callback")
 def google_callback(code: str, state: str = DEFAULT_REDIRECT):

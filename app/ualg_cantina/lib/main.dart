@@ -4,65 +4,71 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
-  final uri = Uri.base;
-  final token = uri.queryParameters['token'];
-
-  if (token != null) {
-    window.localStorage['jwt'] = token;
-  }
-
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  final String apiUrl = 'http://localhost:8000';
+const apiBaseUrl = 'http://localhost:8000';
 
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cantina UAlg',
-      home: HomePage(apiUrl: apiUrl),
+      home: TokenHandler(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  final String apiUrl;
-  HomePage({required this.apiUrl});
-
+class TokenHandler extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  State<TokenHandler> createState() => _TokenHandlerState();
 }
 
-class _HomePageState extends State<HomePage> {
-  String? jwt;
-  Map<String, dynamic>? userInfo;
+class _TokenHandlerState extends State<TokenHandler> {
+  String? token;
+  String? role;
   List<Map<String, dynamic>> ementa = [];
 
   @override
   void initState() {
     super.initState();
-    jwt = window.localStorage['jwt'];
-    if (jwt != null) {
-      fetchUserInfo();
+
+    // Extrai token da URL se presente (ex: /token?token=xxx)
+    final uri = Uri.base;
+    final tokenFromUrl = uri.queryParameters['token'];
+    if (tokenFromUrl != null) {
+      window.history.pushState(null, 'UAlg Cantina', '/'); // limpa URL
+      setState(() {
+        token = tokenFromUrl;
+      });
+      fetchUserRole();
       fetchEmenta();
     }
   }
 
-  Future<void> fetchUserInfo() async {
+  void login() {
+    final loginUrl = '$apiBaseUrl/login?redirect=http://localhost:5000/token';
+    window.location.href = loginUrl;
+  }
+
+  Future<void> fetchUserRole() async {
     final response = await http.get(
-      Uri.parse('${widget.apiUrl}/me'),
-      headers: {'Authorization': 'Bearer $jwt'},
+      Uri.parse('$apiBaseUrl/me'),
+      headers: {'Authorization': 'Bearer $token'},
     );
     if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
       setState(() {
-        userInfo = jsonDecode(response.body);
+        role = data['role'];
       });
     }
   }
 
   Future<void> fetchEmenta() async {
-    final response = await http.get(Uri.parse('${widget.apiUrl}/week'));
+    final response = await http.get(
+      Uri.parse('$apiBaseUrl/week'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       setState(() {
@@ -73,16 +79,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (jwt == null) {
+    if (token == null) {
       return Scaffold(
         appBar: AppBar(title: Text('Cantina UAlg')),
         body: Center(
           child: ElevatedButton(
-            onPressed: () {
-              // Redireciona para login
-              window.location.href =
-                  '${widget.apiUrl}/login?redirect=${Uri.encodeComponent(window.location.origin + '/')}';
-            },
+            onPressed: login,
             child: Text('Login com Google'),
           ),
         ),
@@ -90,17 +92,16 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('Bem-vindo à Cantina')),
+      appBar: AppBar(title: Text('Cantina UAlg')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            if (userInfo != null)
-              Text("Logado como: ${userInfo!['email']} (${userInfo!['role']})"),
+            Text('Logado como: $role'),
             SizedBox(height: 20),
-            Text('Ementa Semanal:', style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            ...ementa.map((e) => Text("${e['data']} - ${e['prato']}")),
+            ...ementa.map(
+              (item) => Text('${item['data']} - ${item['prato']}'),
+            ),
           ],
         ),
       ),
