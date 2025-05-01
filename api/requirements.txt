@@ -5,4 +5,5 @@ pymysql
 python-dotenv
 requests
 cryptography
-jwt
+PyJWT
+python-multipart
