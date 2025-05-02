@@ -1,0 +1,1 @@
+# Placeholder para autenticação futura com Google

@@ -1,16 +1,38 @@
-from fastapi import FastAPI
-from routers import api_router
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+from db import get_session, get_engine
 
-def get_application() -> FastAPI:
-    app = FastAPI(
-        title="API de Ementas",
-        version="0.1.0",
-        description="API REST para gestão de ementas, pratos e alergénios"
-    )
-    app.include_router(api_router)
-    return app
+app = FastAPI()
 
-app = get_application()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # para dev
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
+@app.get("/week")
+def get_weekly_menu(session: Session = Depends(get_session)):
+    # agora com text(...)
+    sql = text("""
+        SELECT e.data, p.designacao 
+        FROM Ementas e
+        JOIN EmentaPrato ep ON e.id = ep.ementa_id
+        JOIN Pratos p ON ep.prato_id = p.id
+        ORDER BY e.data
+    """)
+    result = session.execute(sql)
+    return [
+        {"data": str(row.data), "prato": row.designacao}
+        for row in result
+    ]
 
 
 if __name__ == "__main__":
