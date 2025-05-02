@@ -1,26 +1,16 @@
--- Alergénios
-INSERT INTO Alergenos (nome) VALUES ('Glúten'), ('Lactose'), ('Frutos Secos');
+USE cantina;
 
--- Pratos
-INSERT INTO Pratos (designacao) VALUES 
-('Lasanha de legumes'), 
-('Bife de frango grelhado'), 
-('Salada de atum');
+INSERT IGNORE INTO alergenos (nome) VALUES
+  ('Glúten'),
+  ('Lácteos'),
+  ('Frutos de casca rija');
 
--- Relação prato-alergeno
-INSERT INTO PratoAlergeno (prato_id, alergeno_id) VALUES 
-(1, 1),  -- Lasanha contém glúten
-(1, 2),  -- Lasanha contém lactose
-(3, 3);  -- Salada com frutos secos
+INSERT IGNORE INTO pratos (designacao, alergeno_id) VALUES
+  ('Bolo de chocolate', 2),
+  ('Pão de forma', 1),
+  ('Salada mista', 3);
 
--- Ementas (por data)
-INSERT INTO Ementas (data) VALUES 
-('2025-05-05'), 
-('2025-05-06');
-
--- Associação ementa-prato
-INSERT INTO EmentaPrato (ementa_id, prato_id) VALUES 
-(1, 1), 
-(1, 2), 
-(2, 2), 
-(2, 3);
+INSERT IGNORE INTO ementas (data, prato_id) VALUES
+  (CURRENT_DATE(), 1),
+  (CURRENT_DATE(), 2),
+  (CURRENT_DATE(), 3);

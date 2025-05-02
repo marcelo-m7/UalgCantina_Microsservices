@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   # -----------------------
   # Banco de dados MySQL
@@ -13,10 +15,10 @@ services:
       MYSQL_PASSWORD: ${MYSQL_STAFF_PASSWORD:-staff_pass}
     volumes:
       - db_data:/var/lib/mysql
-      - ./db/init:/docker-entrypoint-initdb.d  # scripts de inicialização
+      - ./db/init:/docker-entrypoint-initdb.d  # scripts de inicialização (schema, users, dados de teste)
     ports:
       - "3306:3306"
-    command: --log-error-verbosity=3
+    command: --log-error-verbosity=3  # nível máximo de detalhes de log
     logging:
       driver: "json-file"
       options:
@@ -46,7 +48,7 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: Dockerfile  # corrige: deve estar dentro de build
+      dockerfile: Dockerfile
     container_name: ualg_api
     restart: unless-stopped
     volumes:
@@ -58,5 +60,7 @@ services:
     ports:
       - "8000:8000"  # http://localhost:8000/docs
 
+# Definição dos volumes nomeados
 volumes:
   db_data:
+#     driver: local

@@ -1,31 +1,27 @@
+-- db/init/001_create_tables.sql
 
-CREATE TABLE Alergenos (
+USE cantina;
+
+-- 1) Tabela de alergénios
+CREATE TABLE IF NOT EXISTS alergenos (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(255) NOT NULL UNIQUE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Pratos (
+-- 2) Tabela de pratos
+CREATE TABLE IF NOT EXISTS pratos (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  designacao VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE PratoAlergeno (
-  prato_id INT NOT NULL,
+  designacao VARCHAR(255) NOT NULL,
   alergeno_id INT NOT NULL,
-  PRIMARY KEY (prato_id, alergeno_id),
-  FOREIGN KEY (prato_id)   REFERENCES Pratos(id)     ON DELETE CASCADE,
-  FOREIGN KEY (alergeno_id) REFERENCES Alergenos(id) ON DELETE CASCADE
-);
+  FOREIGN KEY (alergeno_id) REFERENCES alergenos(id)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Ementas (
+-- 3) Tabela de ementas
+CREATE TABLE IF NOT EXISTS ementas (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  data DATE NOT NULL
-);
-
-CREATE TABLE EmentaPrato (
-  ementa_id INT NOT NULL,
-  prato_id  INT NOT NULL,
-  PRIMARY KEY (ementa_id, prato_id),
-  FOREIGN KEY (ementa_id) REFERENCES Ementas(id) ON DELETE CASCADE,
-  FOREIGN KEY (prato_id)  REFERENCES Pratos(id)  ON DELETE CASCADE
-);
+  data DATE NOT NULL,
+  prato_id INT NOT NULL,
+  FOREIGN KEY (prato_id) REFERENCES pratos(id)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,9 +1,8 @@
 fastapi
 uvicorn[standard]
-sqlalchemy
+SQLAlchemy
 pymysql
 python-dotenv
-requests
+alembic
 cryptography
-PyJWT
-python-multipart
+pydantic_settings
