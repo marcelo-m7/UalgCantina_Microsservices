@@ -1,33 +1,27 @@
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/user_model.dart';
-import '../models/prato.dart';
-import 'auth_service.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:8000';
+  final String baseUrl;
 
-  static Future<User?> getMe() async {
-    final token = AuthService.getToken();
-    if (token == null) return null;
+  ApiService(this.baseUrl);
 
-    final response = await http.get(
-      Uri.parse('\$baseUrl/me'),
-      headers: {'Authorization': 'Bearer \$token'},
-    );
-
+  Future<dynamic> get(String endpoint) async {
+    final response = await http.get(Uri.parse('$baseUrl$endpoint'));
     if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Erro na requisição: ${response.statusCode}');
     }
-    return null;
   }
 
-  static Future<List<Prato>> getEmenta() async {
-    final response = await http.get(Uri.parse('\$baseUrl/week'));
+  Future<dynamic> post(String endpoint, Map<String, String> body) async {
+    final response = await http.post(Uri.parse('$baseUrl$endpoint'), body: body);
     if (response.statusCode == 200) {
-      final list = jsonDecode(response.body) as List;
-      return list.map((e) => Prato.fromJson(e)).toList();
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Erro ao enviar dados: ${response.statusCode}');
     }
-    return [];
   }
 }

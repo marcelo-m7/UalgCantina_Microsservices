@@ -1,27 +1,27 @@
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
-  final String loginUrl = "http://localhost:8000/login?redirect=http://localhost:5000/token";
-
-  Future<void> openLogin() async {
-    final uri = Uri.parse(loginUrl);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Não foi possível abrir o navegador';
-    }
+  void redirectToGoogleLogin() {
+    final redirect = html.window.location.origin;
+    html.window.location.href = 'http://localhost:8000/login?redirect=$redirect';
   }
 
   @override
   Widget build(BuildContext context) {
+    final token = Uri.base.queryParameters['token'];
+    if (token != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, '/home', arguments: token);
+      });
+    }
+
     return Scaffold(
+      appBar: AppBar(title: Text('UAlg Cantina - Login')),
       body: Center(
         child: ElevatedButton(
-          onPressed: openLogin,
-          child: const Text("Entrar com Google"),
+          onPressed: redirectToGoogleLogin,
+          child: Text('Entrar com Google'),
         ),
       ),
     );

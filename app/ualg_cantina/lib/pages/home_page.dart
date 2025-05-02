@@ -1,52 +1,46 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import '../services/auth_service.dart';
+import '../models/user_model.dart';
+import '../widgets/prato_card.dart';
 
 class HomePage extends StatefulWidget {
-  final String jwt;
-  const HomePage({super.key, required this.jwt});
-
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String, dynamic>> pratos = [];
-
-  Future<void> fetchEmenta() async {
-    final response = await http.get(
-      Uri.parse("http://localhost:8000/week"),
-      headers: {"Authorization": "Bearer ${widget.jwt}"},
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      setState(() {
-        pratos = List<Map<String, dynamic>>.from(data);
-      });
-    } else {
-      print("Erro ao buscar ementa: ${response.body}");
-    }
-  }
+  late String token;
+  UserModel? user;
+  List<Map<String, dynamic>> ementa = [];
 
   @override
-  void initState() {
-    super.initState();
-    fetchEmenta();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    token = ModalRoute.of(context)!.settings.arguments as String;
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final currentUser = await AuthService.getCurrentUser(token);
+    final pratos = await AuthService.fetchEmenta();
+
+    setState(() {
+      user = currentUser;
+      ementa = pratos;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (user == null) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Ementa da Cantina")),
-      body: ListView.builder(
-        itemCount: pratos.length,
-        itemBuilder: (context, index) {
-          final item = pratos[index];
-          return ListTile(
-            title: Text(item["prato"]),
-            subtitle: Text(item["data"]),
-          );
-        },
+      appBar: AppBar(title: Text('Bem-vindo, ${user!.role}')),
+      body: ListView(
+        padding: EdgeInsets.all(16),
+        children: ementa.map((item) => PratoCard(item: item)).toList(),
       ),
     );
   }

@@ -1,41 +1,37 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:universal_html/html.dart' as html;
 import '../models/user_model.dart';
 
 class AuthService {
-  static final AuthService _instance = AuthService._internal();
-  factory AuthService() => _instance;
-  AuthService._internal();
+  static const apiUrl = 'http://localhost:8000';
 
-  UserModel? currentUser;
-  List<Map<String, dynamic>> cachedMenu = [];
-
-  final apiBase = 'http://localhost:8000';
-
-  Future<bool> startLoginFlow() async {
-    // Abre a nova aba para login via backend
-    final redirect = 'http://localhost:5000/token';
-    html.window.open('$apiBase/login?redirect=$redirect', '_self');
-
-    // NOTA: Aqui, espera-se que o frontend capture o token via callback
-    return false;
+  static Future<String?> exchangeToken(String idToken) async {
+    final response = await http.post(
+      Uri.parse('$apiUrl/login'),
+      body: {'id_token': idToken},
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['access_token'];
+    }
+    return null;
   }
 
-  Future<void> completeLogin(String token) async {
-    final meRes = await http.get(
-      Uri.parse('$apiBase/me'),
-      headers: {'Authorization': 'Bearer $token'},
+  static Future<UserModel?> getCurrentUser(String jwt) async {
+    final response = await http.get(
+      Uri.parse('$apiUrl/me'),
+      headers: {'Authorization': 'Bearer $jwt'},
     );
-
-    if (meRes.statusCode == 200) {
-      final data = jsonDecode(meRes.body);
-      currentUser = UserModel(email: data['email'], role: data['role']);
-
-      final menuRes = await http.get(Uri.parse('$apiBase/week'));
-      cachedMenu = List<Map<String, dynamic>>.from(jsonDecode(menuRes.body));
-    } else {
-      throw Exception('Token inválido');
+    if (response.statusCode == 200) {
+      return UserModel.fromJson(jsonDecode(response.body));
     }
+    return null;
+  }
+
+  static Future<List<Map<String, dynamic>>> fetchEmenta() async {
+    final response = await http.get(Uri.parse('$apiUrl/week'));
+    if (response.statusCode == 200) {
+      return List<Map<String, dynamic>>.from(jsonDecode(response.body));
+    }
+    return [];
   }
 }

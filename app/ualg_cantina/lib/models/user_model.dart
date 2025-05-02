@@ -1,12 +1,11 @@
-// models/user.dart
-class AppUser {
+class UserModel {
   final String email;
   final String role;
 
-  AppUser({required this.email, required this.role});
+  UserModel({required this.email, required this.role});
 
-  factory AppUser.fromJson(Map<String, dynamic> json) {
-    return AppUser(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
       email: json['email'],
       role: json['role'],
     );
