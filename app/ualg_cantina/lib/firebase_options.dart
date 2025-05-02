@@ -1,25 +1,8 @@
-// lib/firebase_options.dart
-
-class FirebaseOptions {
-  final String apiKey;
-  final String authDomain;
-  final String projectId;
-  final String storageBucket;
-  final String messagingSenderId;
-  final String appId;
-
-  const FirebaseOptions({
-    required this.apiKey,
-    required this.authDomain,
-    required this.projectId,
-    required this.storageBucket,
-    required this.messagingSenderId,
-    required this.appId,
-  });
-}
+// firebase_options.dart (compatível com o Firebase)
+import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 
 class DefaultFirebaseOptions {
-  static const web = FirebaseOptions(
+  static FirebaseOptions get web => const FirebaseOptions(
     apiKey: "AIzaSyBNnTxESatobQsRYU9U6khUpnZ3L_S3Y8Q",
     authDomain: "ualg-cantina.firebaseapp.com",
     projectId: "ualg-cantina",
