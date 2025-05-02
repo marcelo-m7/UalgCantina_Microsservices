@@ -73,7 +73,7 @@ def get_weekly_menu(session: Session = Depends(get_session)):
 def login(id_token: str):
     user_info = verify_google_token(id_token)
     jwt_token = create_internal_token(user_info)
-    return {"access_token": jwt_token, "role": user_info["role"]}
+    return {"access_token": jwt_token, "role": user_info["role"]} #
 
 
 # ---------------------
