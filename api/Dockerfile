@@ -1,20 +1,26 @@
-# Dockerfile para API FastAPI
 FROM python:3.11-slim
 
-# Diretório de trabalho
 WORKDIR /app
 
-# Instalar dependências de sistema
-RUN apt-get update && \
-    apt-get install -y build-essential default-libmysqlclient-dev && \
-    rm -rf /var/lib/apt/lists/*
+# 1) Instala libs de compilação + headers de C/SSL
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+    build-essential \
+    python3-dev \
+    libffi-dev \
+    libssl-dev \
+ && rm -rf /var/lib/apt/lists/*
 
-# Copiar dependências Python
+# 3) Copia requirements e instala explicitamente o bcrypt 4.x
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir \
+      bcrypt==4.0.1 \
+      passlib[bcrypt] \
+      python-jose \
+ && pip install --no-cache-dir -r requirements.txt
 
-# Copiar código da API
 COPY . .
+
 
 # Expor porta
 EXPOSE 8000
