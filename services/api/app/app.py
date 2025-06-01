@@ -20,27 +20,28 @@ app = FastAPI(
 # Adiciona CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=config.settings.allowed_origins_list,
+    # allow_origins=config.settings.allowed_origins_list,~
+    allow_origin_regex=".*",          # <— libera qualquer origem
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    
 )
 
-@app.get("/", response_model=schemas.WeeklyMenuOut)
 @app.get("/public/weekly/", response_model=schemas.WeeklyMenuOut)
 def get_public_weekly_menu(db: Session = Depends(get_db)):
     hoje = date.today()
     weekly = (
         db.query(models.WeeklyMenu)
-        .filter(models.WeeklyMenu.start_date <= hoje)
-        .filter(models.WeeklyMenu.end_date >= hoje)
+        # .filter(models.WeeklyMenu.start_date <= hoje)
+        # .filter(models.WeeklyMenu.end_date >= hoje)
         .first()
     )
-    if not weekly:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Nenhum menu semanal encontrado para a semana atual."
-        )
+    # if not weekly:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_404_NOT_FOUND,
+    #         detail="Nenhum menu semanal encontrado para a semana atual."
+    #     )
     return weekly
 
 # ==================================================
@@ -156,8 +157,8 @@ def list_weekly_menus(db: Session = Depends(get_db)):
 @app.get("/weekly-menus/{week_id}", response_model=schemas.WeeklyMenuOut)
 def retrieve_weekly_menu(week_id: str, db: Session = Depends(get_db)):
     weekly = crud.get_weekly_menu(db, week_id)
-    if not weekly:
-        raise HTTPException(status_code=404, detail="WeeklyMenu não encontrado")
+    # if not weekly:
+    #     raise HTTPException(status_code=404, detail="WeeklyMenu não encontrado")
     return weekly
 
 

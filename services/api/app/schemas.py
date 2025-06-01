@@ -3,23 +3,53 @@
 from __future__ import annotations
 from datetime import date
 from typing import Optional, List
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
+from pydantic import ConfigDict
 from enum import Enum
 
 
+def to_camel(string: str) -> str:
+    """
+    Converte snake_case em camelCase, 
+    para que Pydantic gere a saída JSON em camelCase automaticamente.
+    """
+    parts = string.split('_')
+    return parts[0] + ''.join(word.capitalize() for word in parts[1:])
+
+
+class CamelModel(BaseModel):
+    """
+    Classe base que:
+
+    - Usa alias_generator=to_camel (conversão snake_case -> camelCase)
+    - populate_by_name=True (permite aceitar tanto snake_case quanto camelCase como input)
+    - from_attributes=True (permite ler atributos de objetos ORM diretamente)
+    """
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True
+    )
+
+
+# ----------------------------------------------------
+#   MODELS
+# ----------------------------------------------------
+
 # ------------- User (só para ilustração; a API não faz CRUD direto em users) -------------
-class UserOut(BaseModel):
+class UserOut(CamelModel):
     id: str
-    email: Optional[EmailStr]
-    displayName: Optional[str]
+    email: Optional[str]
+    display_name: Optional[str]
     role: Optional[str]
 
-    class Config:
-        orm_mode = True
+    # Não é necessário especificar orm_mode; já está em CamelModel
+    # class Config:
+    #     orm_mode = True
 
 
 # ------------- Allergen -------------
-class AllergenBase(BaseModel):
+class AllergenBase(CamelModel):
     name: str = Field(..., max_length=255)
     icon: Optional[str] = None
     description: Optional[str] = None
@@ -29,7 +59,7 @@ class AllergenCreate(AllergenBase):
     id: str = Field(..., max_length=255)
 
 
-class AllergenUpdate(BaseModel):
+class AllergenUpdate(CamelModel):
     name: Optional[str] = Field(None, max_length=255)
     icon: Optional[str] = None
     description: Optional[str] = None
@@ -37,9 +67,6 @@ class AllergenUpdate(BaseModel):
 
 class AllergenOut(AllergenBase):
     id: str
-
-    class Config:
-        orm_mode = True
 
 
 # ------------- Dish -------------
@@ -53,7 +80,7 @@ class DishTypeEnum(str, Enum):
     bebida = "bebida"
 
 
-class DishBase(BaseModel):
+class DishBase(CamelModel):
     name: str = Field(..., max_length=255)
     type: DishTypeEnum
     description: Optional[str] = None
@@ -66,7 +93,7 @@ class DishCreate(DishBase):
     id: str = Field(..., max_length=255)
 
 
-class DishUpdate(BaseModel):
+class DishUpdate(CamelModel):
     name: Optional[str] = Field(None, max_length=255)
     type: Optional[DishTypeEnum] = None
     description: Optional[str] = None
@@ -79,12 +106,9 @@ class DishOut(DishBase):
     id: str
     allergens: List[AllergenOut] = Field(default_factory=list)
 
-    class Config:
-        orm_mode = True
-
 
 # ------------- MenuEntry -------------
-class MenuEntryBase(BaseModel):
+class MenuEntryBase(CamelModel):
     date: date
     meal_type: str = Field(..., pattern="^(almoco|jantar)$")
     main_dish_id: str
@@ -98,7 +122,7 @@ class MenuEntryCreate(MenuEntryBase):
     id: str = Field(..., max_length=255)
 
 
-class MenuEntryUpdate(BaseModel):
+class MenuEntryUpdate(CamelModel):
     date: Optional[date] = None
     meal_type: Optional[str] = Field(None, pattern="^(almoco|jantar)$")
     main_dish_id: Optional[str] = None
@@ -115,12 +139,9 @@ class MenuEntryOut(MenuEntryBase):
     dessert: Optional[DishOut] = None
     sopa: Optional[DishOut] = None
 
-    class Config:
-        orm_mode = True
-
 
 # ------------- DayMenu -------------
-class DayMenuBase(BaseModel):
+class DayMenuBase(CamelModel):
     date: date
     weekly_menu_id: str
     lunch_entry_id: Optional[str] = None
@@ -131,7 +152,7 @@ class DayMenuCreate(DayMenuBase):
     pass
 
 
-class DayMenuUpdate(BaseModel):
+class DayMenuUpdate(CamelModel):
     lunch_entry_id: Optional[str] = None
     dinner_entry_id: Optional[str] = None
 
@@ -140,12 +161,9 @@ class DayMenuOut(DayMenuBase):
     lunch_entry: Optional[MenuEntryOut] = None
     dinner_entry: Optional[MenuEntryOut] = None
 
-    class Config:
-        orm_mode = True
-
 
 # ------------- WeeklyMenu -------------
-class WeeklyMenuBase(BaseModel):
+class WeeklyMenuBase(CamelModel):
     week_id: str = Field(..., max_length=255)
     start_date: date
     end_date: date
@@ -155,13 +173,10 @@ class WeeklyMenuCreate(WeeklyMenuBase):
     pass
 
 
-class WeeklyMenuUpdate(BaseModel):
+class WeeklyMenuUpdate(CamelModel):
     start_date: Optional[date] = None
     end_date: Optional[date] = None
 
 
 class WeeklyMenuOut(WeeklyMenuBase):
     days: List[DayMenuOut] = Field(default_factory=list)
-
-    class Config:
-        orm_mode = True
