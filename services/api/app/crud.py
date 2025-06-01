@@ -142,8 +142,13 @@ def delete_menu_entry(db: Session, entry_id: str) -> None:
 
 
 # ------------- WeeklyMenu -------------
-def get_weekly_menu(db: Session, week_id: str) -> models.WeeklyMenu | None:
-    return db.query(models.WeeklyMenu).filter(models.WeeklyMenu.week_id == week_id).first()
+# crud.py  (exemplo simples)
+def get_weekly_menu(db: Session, week_id: str):
+    weekly = db.query(models.WeeklyMenu).filter_by(week_id=week_id).first()
+    if weekly and weekly.days is None:
+        weekly.days = []        # ← garante lista vazia
+    return weekly
+
 
 
 def get_all_weekly_menus(db: Session) -> list[models.WeeklyMenu]:

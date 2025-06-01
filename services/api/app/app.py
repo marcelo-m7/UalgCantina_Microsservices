@@ -30,23 +30,15 @@ app.add_middleware(
 
 @app.get("/public/weekly/", response_model=schemas.WeeklyMenuOut)
 def get_public_weekly_menu(db: Session = Depends(get_db)):
-    hoje = date.today()
-
     weekly = (
         db.query(models.WeeklyMenu)
-        # .filter(models.WeeklyMenu.start_date <= hoje)
-        # .filter(models.WeeklyMenu.end_date >= hoje)
-        .order_by(models.WeeklyMenu.start_date.desc())   # pega o mais recente
-        .first()                                         # ← executa!
+        .order_by(models.WeeklyMenu.start_date.desc())
+        .first()
     )
-
     if not weekly:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Nenhum menu semanal encontrado."
-        )
+        raise HTTPException(404, "Sem menu nesta semana")
+    return weekly       # agora contém days=[]
 
-    return weekly          # agora é um objeto WeeklyMenu, não Query
 
 
 # ==================================================
