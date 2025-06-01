@@ -121,7 +121,7 @@ def delete_dish(dish_id: str, db: Session = Depends(get_db)):
 
 
 # — ROTAS PÚBLICAS DE MENU — #
-
+@app.get("/", response_model=list[schemas.MenuEntryOut])
 @app.get("/api/v1/public/weekly/", response_model=list[schemas.MenuEntryOut])
 def get_public_weekly_menu(db: Session = Depends(get_db)):
     """

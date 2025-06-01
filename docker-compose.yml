@@ -4,14 +4,21 @@ services:
   db:
     image: mysql:8.0
     container_name: app_db
-    ports:
-      - "3306:3306"
     env_file:
       - .env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DB}      # Ex.: cantina_db
+      MYSQL_USER: ${MYSQL_USER}        # Ex.: cantina_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
-      # Se você tiver scripts de inicialização no host, ajuste o caminho abaixo:
-      - ./services/api/app/db/init:/docker-entrypoint-initdb.d
+      - ./services/db/app/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent", "-u", "root", "-p${MYSQL_PASSWORD}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
