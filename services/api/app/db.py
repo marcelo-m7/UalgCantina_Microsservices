@@ -1,4 +1,4 @@
-# project/api/db.py
+# api/db.py
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -29,4 +29,4 @@ Base = declarative_base()
 # Importar os modelos para que sejam registrados na Base.metadata
 # Embora a importação nos routers já faça isso, importar aqui garante que
 # Base.metadata.create_all() em main.py "conheça" todos os modelos.
-from . import models
+from models import *

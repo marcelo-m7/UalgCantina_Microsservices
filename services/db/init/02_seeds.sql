@@ -1,6 +1,5 @@
--- project/db/init/02_seeds.sql
-use cantina_db;
-go
+-- services/db/init/02_seeds.sql
+USE cantina_db;
 
 INSERT INTO users (name, email, role) VALUES
     ('Marcelo Santos', 'marcelosouzasantos77@gmail.com', 'admin');

@@ -1,7 +1,7 @@
-# project/api/models.py
+# api/models.py
 from sqlalchemy import Table, Column, String, Integer, Float, Date, ForeignKey, Enum
-from sqlalchemy.orm import relationship, declarative_base
-from .db import Base
+from sqlalchemy.orm import relationship
+from db import Base
 import enum
 
 class DishType(enum.Enum):

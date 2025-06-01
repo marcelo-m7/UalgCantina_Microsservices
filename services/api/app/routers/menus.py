@@ -1,7 +1,8 @@
 # project/api/routers/menus.py
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException   #, Path
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from datetime import timedelta # Import timedelta
+# from typing import List, Optional
 from datetime import date
 from uuid import uuid4 # Import uuid4
 from .. import models, schemas
@@ -67,7 +68,7 @@ def build_weekly_menu(db: Session, start_date: date, end_date: date):
 
         weekly_menu_data["days"].append(day_menu_data)
         current_date += timedelta(days=1)
- from datetime import timedelta # Import timedelta
+
     return schemas.WeeklyMenu.model_validate(weekly_menu_data)
 
 

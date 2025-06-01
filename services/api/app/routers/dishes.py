@@ -3,9 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from .. import models, schemas, auth
-from ..db import SessionLocal
-from ..auth import verify_token # Assuming auth module is used for authentication
+from . import models, schemas, auth
+from .db import SessionLocal
+from .auth import verify_token # Assuming auth module is used for authentication
 
 router = APIRouter(
     prefix="/dishes",

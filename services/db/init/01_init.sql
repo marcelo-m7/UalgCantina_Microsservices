@@ -1,3 +1,5 @@
+-- services/db/init/01_init.sql
+
 -- Database initialization scripts can go here.
 -- For example, you could add INSERT statements for initial data.
 -- This file is executed by the PostgreSQL Docker image entrypoint.
@@ -23,6 +25,7 @@ CREATE TABLE users (
     role ENUM('admin','editor') NOT NULL DEFAULT 'admin',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) 
+
 -- Create the allergens table
 CREATE TABLE allergens (
     id VARCHAR(255) PRIMARY KEY,
