@@ -31,18 +31,23 @@ app.add_middleware(
 @app.get("/public/weekly/", response_model=schemas.WeeklyMenuOut)
 def get_public_weekly_menu(db: Session = Depends(get_db)):
     hoje = date.today()
+
     weekly = (
         db.query(models.WeeklyMenu)
         # .filter(models.WeeklyMenu.start_date <= hoje)
         # .filter(models.WeeklyMenu.end_date >= hoje)
-        .first()
+        .order_by(models.WeeklyMenu.start_date.desc())   # pega o mais recente
+        .first()                                         # ← executa!
     )
-    # if not weekly:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_404_NOT_FOUND,
-    #         detail="Nenhum menu semanal encontrado para a semana atual."
-    #     )
-    return weekly
+
+    if not weekly:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Nenhum menu semanal encontrado."
+        )
+
+    return weekly          # agora é um objeto WeeklyMenu, não Query
+
 
 # ==================================================
 #   As tabelas JÁ foram criadas pelos scripts do MySQL
@@ -149,17 +154,23 @@ def delete_dish(dish_id: str, db: Session = Depends(get_db)):
 
 
 # --- ROTAS WEEKLY_MENUS (Protegido: CRUD completo) ---
+# Lista → .all()
 @app.get("/weekly-menus/", response_model=list[schemas.WeeklyMenuOut])
 def list_weekly_menus(db: Session = Depends(get_db)):
-    return crud.get_all_weekly_menus(db)
+    return db.query(models.WeeklyMenu).all()
 
-
+# Obter por id → .first() ou .one()
 @app.get("/weekly-menus/{week_id}", response_model=schemas.WeeklyMenuOut)
 def retrieve_weekly_menu(week_id: str, db: Session = Depends(get_db)):
-    weekly = crud.get_weekly_menu(db, week_id)
-    # if not weekly:
-    #     raise HTTPException(status_code=404, detail="WeeklyMenu não encontrado")
+    weekly = db.query(models.WeeklyMenu).filter_by(week_id=week_id).first()
+    if not weekly:
+        raise HTTPException(status_code=404, detail="WeeklyMenu não encontrado")
     return weekly
+
+@app.get("/menus/weekly-admin/", response_model=list[schemas.WeeklyMenuOut])
+def list_weekly_menus_admin(db: Session = Depends(get_db)):
+    return crud.get_all_weekly_menus(db)
+
 
 
 @app.post(

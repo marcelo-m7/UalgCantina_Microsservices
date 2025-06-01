@@ -7,7 +7,7 @@ import type { WeeklyMenu, MenuEntry, DayMenu } from '@/lib/types';
 // The admin endpoint for menus would be different, e.g., '/menus/weekly'
 
 export const getPublicWeeklyMenu = async (): Promise<WeeklyMenu> => {
-  const response = await apiClient.get('/public/weekly/'); // Ensure this matches your public API endpoint
+  const response = await apiClient.get('/weekly-menus/'); // Ensure this matches your public API endpoint
   // TODO: Data transformation might be needed here if API structure differs significantly from WeeklyMenu type
   // For example, resolving dish details if only IDs are returned.
   // For now, assume the API returns a compatible structure or this function will be adapted.
