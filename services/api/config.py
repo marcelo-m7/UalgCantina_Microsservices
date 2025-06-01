@@ -1,8 +1,0 @@
-from os import environ
-from dotenv import load_dotenv
-load_dotenv()
-DB_URL = environ["DATABASE_URL"]
-FIREBASE_PROJECT_ID = environ["FIREBASE_PROJECT_ID"]
-FIREBASE_PRIVATE_KEY_ID = environ["FIREBASE_PRIVATE_KEY_ID"]
-FIREBASE_PRIVATE_KEY = environ["FIREBASE_PRIVATE_KEY"]
-FIREBASE_CLIENT_EMAIL = environ["FIREBASE_CLIENT_EMAIL"]

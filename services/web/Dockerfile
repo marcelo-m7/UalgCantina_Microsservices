@@ -1,6 +1,7 @@
+# web/Dockerfile
 # Stage 1: Build the Next.js application
 FROM node:20-alpine AS builder
-WORKDIR /app
+WORKDIR /web/app
 
 # Copy package.json and lock file
 COPY package.json ./
@@ -21,7 +22,7 @@ RUN npm run build
 
 # Stage 2: Setup Nginx and run the standalone Next.js app
 FROM node:20-alpine AS runner
-WORKDIR /app
+WORKDIR /web/app
 
 # Install Nginx and Supervisor
 RUN apk add --no-cache nginx supervisor

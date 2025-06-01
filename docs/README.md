@@ -1,84 +1,135 @@
-# Guia de Implementação – Banco de Dados MySQL
+# CantinaCast - Sistema de Gestão de Ementas da UAlg
 
-**CantinaCast – Cantina da Universidade do Algarve**
-Versão 1.0 · 30‑05‑2025
+## Visão Geral
 
----
+O CantinaCast é um sistema web moderno e responsivo para a gestão e visualização das ementas da cantina da Universidade do Algarve (UAlg). O projeto visa fornecer uma plataforma eficiente para administradores gerenciarem alérgenos, pratos e ementas semanais, ao mesmo tempo que oferece aos utilizadores finais uma interface intuitiva para consultar as opções de refeição e, futuramente, obter sugestões personalizadas.
 
-## 1. Objetivo
+## Funcionalidades Chave
 
-Este guia detalha a criação, inicialização e manutenção do esquema MySQL utilizado pelo back‑end FastAPI do CantinaCast. Inclui o script `init.sql` (link abaixo) para provisionamento automático do contêiner `db` no `docker-compose`.
+*   **Gestão de Alérgenos**: Cadastro, edição e exclusão de alérgenos com informações detalhadas e ícones.
+*   **Gestão de Pratos**: Cadastro, edição e exclusão de pratos, associando-os a tipos (carne, peixe, vegetariano, etc.), preços, informações nutricionais (kcal) e alérgenos.
+*   **Gestão de Ementas Semanais**: Definição da ementa para cada dia da semana (almoço e jantar), associando pratos (sopa, prato principal, alternativo, sobremesa).
+*   **Visualização Pública da Ementa**: Interface amigável para utilizadores consultarem a ementa da semana atual.
+*   **AI Suggestions (Futuro)**: Implementação de um motor de sugestões baseado em IA para auxiliar utilizadores com escolhas de pratos (ex: sugestões de harmonização de pratos).
 
-[Download do script SQL de inicialização](sandbox:/mnt/data/init.sql)
+## Arquitetura
 
----
+O CantinaCast adota uma arquitetura de microsserviços (ou, neste caso, serviços componentes) Dockerizados:
 
-## 2. Resumo do Esquema
+*   **Frontend**: Desenvolvido com **Next.js (React)** para uma interface de utilizador rápida e dinâmica.
+*   **Backend**: Construído com **FastAPI (Python)**, fornecendo uma API robusta e performática para gerenciar os dados.
+*   **Banco de Dados**: Utiliza **PostgreSQL** para armazenamento seguro e eficiente dos dados.
+*   **Containerização**: Todos os serviços são empacotados e orquestrados usando **Docker** e **Docker Compose**, garantindo ambientes de desenvolvimento e produção consistentes.
+*   **Autenticação**: Integração com **Firebase Authentication** para gestão de utilizadores (administradores).
+*   **AI (Futuro)**: Utilização de **Vertex AI Genkit** para funcionalidades de IA.
 
-| Tabela          | Descrição                               | Chaves / Índices Relevantes   |
-| --------------- | --------------------------------------- | ----------------------------- |
-| `users`         | Controlo de acesso (admins/editores)    | `email` UNIQUE, `role` ENUM   |
-| `allergens`     | Catálogo de alérgenos                   | —                             |
-| `dishes`        | Pratos disponíveis                      | `type` ENUM, preço, kcal      |
-| `dish_allergen` | Ligação *many‑to‑many* prato ↔ alérgeno | PK `(dish_id, allergen_id)`   |
-| `weeks`         | Identificador ISO da semana             | `week_id` UNIQUE              |
-| `day_menus`     | Dias dentro de uma semana               | `date` UNIQUE, FK→`weeks`     |
-| `menu_entries`  | Almoço/Jantar por dia                   | UK `(day_menu_id, meal_type)` |
+## Entidades Principais e Interação com API
 
-> **Nota:** todas as tabelas usam `InnoDB` e `utf8mb4`.
+A aplicação interage com a API backend via endpoints RESTful:
 
----
+### Alérgenos (`Allergen`)
 
-## 3. Diagrama ER Simplificado
+*   Representa substâncias que podem causar reações alérgicas.
+*   Campos: `id`, `name`, `icon`, `description`.
+*   Endpoints: `GET /allergens/`, `POST /allergens/`, `PUT /allergens/{id}`, `DELETE /allergens/{id}`.
 
-Sugere‑se gerar um diagrama ER usando MySQL Workbench ou [dbdiagram.io](https://dbdiagram.io) importando o `init.sql`.
+### Pratos (`Dish`)
 
----
+*   Itens alimentares servidos na cantina.
+*   Campos: `id`, `name`, `type`, `description`, `price`, `kcals`, `allergenIds`.
+*   Endpoints: `GET /dishes/`, `POST /dishes/`, `PUT /dishes/{id}`, `DELETE /dishes/{id}`.
 
-## 4. Script `init.sql`
+### Ementas (`WeeklyMenu`, `DayMenu`, `MenuEntry`)
 
-O ficheiro cria o schema, aplica restrições de chave‑estrangeira e insere dados de semente:
+*   Define o calendário semanal de refeições.
+*   Campos: `weekId`, `startDate`, `endDate`, `days` (WeeklyMenu); `date`, `lunch`, `dinner` (DayMenu); `id`, `date`, `mealType`, `mainDishId`, `mainDish`, `altDishId`, `altDish`, `dessertId`, `dessert`, `sopaId`, `sopa`, `notes` (MenuEntry).
+*   Endpoints: `GET /public/weekly/`, `GET /menus/weekly-admin/`, `PUT /menus/day/{date}/{mealType}`.
 
-* **1 utilizador** administrador (Marcelo Santos)
-* **8 alérgenos** mais comuns
-* **6 pratos** de exemplo
-* **Associações** prato ↔ alérgeno
+## Guia de Dockerização
 
-[Download do script SQL de inicialização](sandbox:/mnt/data/init.sql)
-
----
-
-## 5. Integração com Docker
-
-No `docker-compose.yml`, monte o script:
-
-```yaml
-  db:
-    image: mariadb:10.11
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+Este projeto está configurado para ser executado facilmente usando Docker Compose. A estrutura de pastas reflete a separação dos serviços:
 ```
+text
+cantinacast/
+├── web/               # Frontend Next.js
+│   ├── Dockerfile
+│   └── ...
+├── api/               # Backend FastAPI
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── main.py
+│   ├── db.py
+│   ├── auth.py
+│   ├── models.py
+│   └── routers/
+│       ├── allergens.py
+│       ├── dishes.py
+│       └── menus.py
+├── db/                # Banco de dados PostgreSQL
+│   ├── Dockerfile
+│   └── init/
+│       └── 01_init.sql   # Script de inicialização opcional
+├── .env               # Variáveis de ambiente (NÃO commitar valores sensíveis!)
+├── .env.example       # Exemplo de variáveis de ambiente (para commit)
+└── docker-compose.yml # Orquestração dos containers
+```
+*   **web/Dockerfile**: Define a imagem Docker para a aplicação Next.js.
+*   **api/Dockerfile**: Define a imagem Docker para o backend FastAPI.
+*   **db/Dockerfile**: Define a imagem Docker para o banco de dados PostgreSQL (baseado na imagem oficial).
+*   **.env**: Contém as variáveis de ambiente reais (credenciais do DB, URL da API, etc.). **Mantenha este arquivo fora do controle de versão em repositórios públicos.**
+*   **.env.example**: Um arquivo de exemplo para as variáveis de ambiente, com placeholders para valores sensíveis.
+*   **docker-compose.yml**: Orquestra os três serviços (`web`, `api`, `db`), definindo suas dependências, portas e volumes.
 
-Na primeira execução, o entrypoint do MariaDB executará `init.sql`.
+## Passos de Setup Inicial (Realizados pela AI)
 
----
+Para configurar a estrutura básica do projeto, a AI realizou os seguintes passos:
 
-## 6. Boas‑Práticas
+1.  Criou a pasta `api` para o código do backend.
+2.  Criou o arquivo `api/db.py` para a configuração da conexão com o banco de dados utilizando SQLAlchemy.
+3.  Criou o arquivo `api/main.py` como ponto de entrada da aplicação FastAPI, incluindo a inicialização do banco de dados e middlewares.
+4.  Criou o arquivo `api/auth.py` para lidar com a lógica de autenticação (ex: via Firebase Admin SDK).
+5.  Criou o arquivo `api/models.py` definindo as classes SQLAlchemy para as entidades `Allergen`, `Dish`, `WeeklyMenu`, `DayMenu`, e `MenuEntry`.
+6.  Criou a pasta `api/routers` para organizar os endpoints da API por entidade.
+7.  Criou o arquivo `api/routers/allergens.py` com um router FastAPI para os endpoints de alérgenos.
+8.  Criou o arquivo `api/routers/dishes.py` com um router FastAPI para os endpoints de pratos.
+9.  Criou o arquivo `api/routers/menus.py` com um router FastAPI para os endpoints de ementas.
+10. Atualizou o arquivo `api/main.py` para importar e incluir os routers criados.
+11. Criou a estrutura de pastas `db/init`.
+12. Criou o arquivo `db/init/01_init.sql` (vazio, para scripts de inicialização opcionais do banco).
+13. Criou o Dockerfile para o frontend em `web/Dockerfile`.
+14. Criou o Dockerfile para o backend em `api/Dockerfile`.
+15. Criou o Dockerfile para o banco de dados em `db/Dockerfile`.
+16. Criou o arquivo `docker-compose.yml` na raiz do projeto para orquestrar os serviços.
+17. Criou o arquivo `.env` na raiz do projeto com variáveis de ambiente de exemplo.
+18. Criou o arquivo `.env.example` na raiz do projeto com placeholders para as variáveis de ambiente.
 
-1. **Migrations**: use *Alembic* no FastAPI para evoluções. Trave a branch ao modificar `init.sql`.
-2. **Backups**: `mysqldump --routines --single-transaction ementas > backup.sql` (agendar via cron no host ou contêiner).
-3. **Dados sensíveis**: nunca commit das passwords de BD; utilize variáveis de ambiente no `docker-compose`.
-4. **Indexes**: adicionar conforme crescimento (ex.: `price`, `type` em `dishes`).
+Esta estrutura fornece uma base sólida para começar a implementar a lógica de negócio e as interfaces de utilizador.
 
----
+## Como Executar o Projeto com Docker Compose
 
-## 7. Próximos Passos
+Certifique-se de ter o Docker e o Docker Compose instalados.
 
-* Popular a tabela `weeks` e `day_menus` via backend ou script.
-* Considerar colunas de audit (`updated_at`, `updated_by`).
-* Analisar *partitioning* por ano se o histórico crescer.
+1.  **Configurar Variáveis de Ambiente:** Copie o arquivo `.env.example` para `.env` na raiz do projeto e preencha com as credenciais e configurações apropriadas (especialmente as credenciais do PostgreSQL).
+```
+bash
+    cp .env.example .env
+    # Edite o arquivo .env com seus valores
+    
+```
+2.  **Construir e Iniciar os Serviços:** No terminal, navegue até a pasta raiz do projeto (onde está o `docker-compose.yml`) e execute o seguinte comando:
+```
+bash
+    docker-compose up --build
+    
+```
+Este comando irá construir as imagens Docker para cada serviço (frontend, backend, database) e iniciar os contêineres. Na primeira execução, o backend usará o SQLAlchemy para criar as tabelas no banco de dados.
 
----
+3.  **Verificar os Logs:** Acompanhe os logs no terminal para garantir que todos os serviços iniciaram sem erros.
 
-**Contato:** dev‑[cantina@ualg.pt](mailto:cantina@ualg.pt)
+4.  **Acessar a Aplicação:**
+
+    *   **Frontend:** Abra o navegador em `http://localhost:3000`. Você deverá ver a interface do utilizador (se o frontend já tiver sido implementado).
+    *   **API Docs (Swagger UI):** A documentação interativa da API FastAPI está disponível em `http://localhost:8000/docs`. Você pode explorar os endpoints e testá-los diretamente no navegador.
+    *   **Banco de Dados:** O banco de dados PostgreSQL estará rodando e acessível internamente pelos contêineres via hostname `db` na porta 5432. Externamente (se desejar conectar com um cliente SQL), pode usar `localhost:5432` com as credenciais definidas no `.env`.
+
+Para parar os serviços, pressione `Ctrl+C` no terminal onde o `docker-compose up` está a correr. Para remover os contêineres e redes (mas mantendo os dados do banco), use `docker-compose down`. Para remover contêineres, redes e os dados do banco (volume), use `docker-compose down -v` (use com cuidado!).

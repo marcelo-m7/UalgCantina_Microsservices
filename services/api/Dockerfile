@@ -1,26 +1,21 @@
-# Use uma imagem base Python
+# Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
-# Define o diretório de trabalho dentro do container
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /api/app
 
-# Copia os arquivos de requisitos e instala as dependências
-COPY requirements.txt .
+# Copy the requirements file into the container
+COPY requirements.txt /api/app/
+
+# Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia o restante dos arquivos da aplicação
-COPY . .
+# Copy the rest of the application code into the container
+COPY ./app /api/app
 
-# Define as variáveis de ambiente (podem ser sobrescritas no docker-compose)
-# ENV DATABASE_URL=...
-# ENV FIREBASE_PROJECT_ID=...
-# ENV FIREBASE_PRIVATE_KEY_ID=...
-# ENV FIREBASE_PRIVATE_KEY="..."
-# ENV FIREBASE_CLIENT_EMAIL=...
-
-# Expõe a porta que o Gunicorn irá ouvir
+# Make port 8000 available to the outside world
 EXPOSE 8000
 
-# Comando para rodar a aplicação com Gunicorn e gevent
-# O '--worker-class gevent' é importante para o desempenho em produção
-CMD ["gunicorn", "--worker-class", "gevent", "--bind", "0.0.0.0:8000", "app:app"]
+# Run the application
+# Assuming your main FastAPI app instance is named 'app' in 'main.py'
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

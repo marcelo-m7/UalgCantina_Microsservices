@@ -1,0 +1,19 @@
+gitignore
+# Byte-code files
+*.pyc
+__pycache__/
+
+# dotenv files
+.env
+
+# FastAPI/Uvicorn specific
+.uvicorn_reload
+
+# IDE specific files (VS Code)
+.vscode/
+
+# OS specific files
+.DS_Store
+
+# Logs
+*.log
