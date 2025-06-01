@@ -64,28 +64,28 @@ The API will be running at `http://127.0.0.1:8000`.
 
 ## API Endpoints
 
-The API provides the following endpoints under the `/api/v1` prefix:
+The API provides the following endpoints under the `` prefix:
 
-*   **`/api/v1/allergens/`**:
+*   **`/allergens/`**:
     *   `GET`: Retrieve a list of all allergens (Public).
     *   `POST`: Create a new allergen (Authenticated - Admin/Editor).
     *   `PUT /{allergen_id}`: Update an existing allergen (Authenticated - Admin/Editor).
     *   `DELETE /{allergen_id}`: Delete an allergen (Authenticated - Admin/Editor).
 
-*   **`/api/v1/dishes/`**:
+*   **`/dishes/`**:
     *   `GET`: Retrieve a list of all dishes, including their associated allergens (Public).
     *   `POST`: Create a new dish (Authenticated - Admin/Editor).
     *   `PUT /{dish_id}`: Update an existing dish (Authenticated - Admin/Editor).
     *   `DELETE /{dish_id}`: Delete a dish (Authenticated - Admin/Editor).
 
-*   **`/api/v1/menus/`**:
-    *   `/api/v1/menus/public/weekly/`:
+*   **`/menus/`**:
+    *   `/menus/public/weekly/`:
         *   `GET`: Retrieve the current week's menu (Public).
-    *   `/api/v1/menus/weekly-admin/`:
+    *   `/menus/weekly-admin/`:
         *   `GET`: Retrieve a weekly menu for a specified date range (Authenticated - Admin/Editor).
-    *   `/api/v1/menus/day/{date_str}/{meal_type}`:
+    *   `/menus/day/{date_str}/{meal_type}`:
         *   `PUT`: Create or update a menu entry for a specific date and meal type (Authenticated - Admin/Editor).
-    *   `/api/v1/menus/entry/{entry_id}`:
+    *   `/menus/entry/{entry_id}`:
         *   `DELETE`: Delete a specific menu entry by ID (Authenticated - Admin/Editor).
 
 ## Database Schema

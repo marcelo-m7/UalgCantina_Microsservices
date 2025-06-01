@@ -14,7 +14,7 @@ from deps import get_db, verify_token
 app = FastAPI(
     title="API Cantina",
     version="1.0.0",
-    openapi_prefix="/api/v1"
+    description="API para gerenciamento de menus e pratos da cantina"
 )
 
 # Adiciona CORS
@@ -25,6 +25,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 @app.get("/", response_model=schemas.WeeklyMenuOut)
 @app.get("/public/weekly/", response_model=schemas.WeeklyMenuOut)
 def get_public_weekly_menu(db: Session = Depends(get_db)):

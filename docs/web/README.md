@@ -238,7 +238,7 @@ A aplicação frontend interage com uma API backend (espera-se FastAPI) para ger
 Crie um ficheiro `.env` na raiz do projeto com o seguinte conteúdo (substitua pelos seus valores):
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_API_URL=http://localhost:8000
 
 # Variáveis opcionais para Genkit/Google AI, se o frontend fizer chamadas diretas
 # Normalmente, a chave de API do Google AI é gerida pelo backend ou pelo ambiente de execução do Genkit.
@@ -292,7 +292,7 @@ O frontend está configurado para ser "dockerizado" usando um `Dockerfile` multi
           dockerfile: Dockerfile
         ports: ["3000:80"] # Mapeia a porta 3000 do host para a porta 80 do contêiner (Nginx)
         environment:
-          NEXT_PUBLIC_API_URL: http://api:8000/api/v1 # Exemplo, API acessível internamente como 'api'
+          NEXT_PUBLIC_API_URL: http://api:8000 # Exemplo, API acessível internamente como 'api'
         # depends_on: [api] # Se o frontend depende da API
 
       api:

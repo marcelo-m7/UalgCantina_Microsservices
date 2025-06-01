@@ -117,23 +117,23 @@ backend/
 
 ## Endpoints da API
 
-Todos os endpoints estão sob o prefixo `/api/v1`.
+Todos os endpoints estão sob o prefixo ``.
 
 ### Rotas Públicas
 
-* **`GET /api/v1/allergens/`**
+* **`GET /allergens/`**
   Retorna a lista de todos os alergénios.
   **Autenticação:** Nenhuma.
 
-* **`GET /api/v1/dishes/`**
+* **`GET /dishes/`**
   Retorna a lista de todos os pratos (incluindo campos básicos e IDs de alergénios).
   **Autenticação:** Nenhuma.
 
-* **`GET /api/v1/dishes/{dish_id}`**
+* **`GET /dishes/{dish_id}`**
   Retorna os detalhes de um prato específico, incluindo lista de alergénios.
   **Autenticação:** Nenhuma.
 
-* **`GET /api/v1/public/weekly/`**
+* **`GET /public/weekly/`**
   Retorna todos os registros de `MenuEntry`. O frontend pode filtrar por data (`date`) e tipo de refeição (`meal_type`).
   **Autenticação:** Nenhuma.
 
@@ -147,7 +147,7 @@ Authorization: Bearer <ID_TOKEN_DO_FIREBASE>
 
 O token será verificado contra o projeto Firebase definido em `FIREBASE_PROJECT_ID`. Se inválido ou ausente, a API retorna 401.
 
-* **`POST /api/v1/allergens/`**
+* **`POST /allergens/`**
   Cria um novo alergénio.
   **Corpo (JSON):**
 
@@ -162,7 +162,7 @@ O token será verificado contra o projeto Firebase definido em `FIREBASE_PROJECT
 
   **Autenticação:** Sim.
 
-* **`PUT /api/v1/allergens/{allergen_id}`**
+* **`PUT /allergens/{allergen_id}`**
   Atualiza um alergénio existente (qualquer campo enviado no corpo será modificado).
   **Corpo (JSON):**
 
@@ -176,11 +176,11 @@ O token será verificado contra o projeto Firebase definido em `FIREBASE_PROJECT
 
   **Autenticação:** Sim.
 
-* **`DELETE /api/v1/allergens/{allergen_id}`**
+* **`DELETE /allergens/{allergen_id}`**
   Remove um alergénio.
   **Autenticação:** Sim (Retorna 204 se removido com sucesso ou nada se não encontrado).
 
-* **`POST /api/v1/dishes/`**
+* **`POST /dishes/`**
   Cria um novo prato.
   **Corpo (JSON):**
 
@@ -198,7 +198,7 @@ O token será verificado contra o projeto Firebase definido em `FIREBASE_PROJECT
 
   **Autenticação:** Sim.
 
-* **`PUT /api/v1/dishes/{dish_id}`**
+* **`PUT /dishes/{dish_id}`**
   Atualiza um prato existente (qualquer campo enviado no corpo será modificado).
   **Corpo (JSON):**
 
@@ -212,19 +212,19 @@ O token será verificado contra o projeto Firebase definido em `FIREBASE_PROJECT
 
   **Autenticação:** Sim.
 
-* **`DELETE /api/v1/dishes/{dish_id}`**
+* **`DELETE /dishes/{dish_id}`**
   Remove um prato.
   **Autenticação:** Sim (Retorna 204 se removido com sucesso ou nada se não encontrado).
 
-* **`GET /api/v1/menus/{date_str}/{meal_type}`**
+* **`GET /menus/{date_str}/{meal_type}`**
   Consulta uma entrada de menu específica para uma data e tipo de refeição.
 
   * `date_str`: formato `YYYY-MM-DD`
   * `meal_type`: `"almoco"` ou `"jantar"`
-    **Exemplo:** `/api/v1/menus/2025-06-01/almoco`
+    **Exemplo:** `/menus/2025-06-01/almoco`
     **Autenticação:** Sim.
 
-* **`POST /api/v1/menus/`**
+* **`POST /menus/`**
   Cria uma nova entrada de menu para data e tipo de refeição.
   **Corpo (JSON):**
 
@@ -243,7 +243,7 @@ O token será verificado contra o projeto Firebase definido em `FIREBASE_PROJECT
 
   **Autenticação:** Sim.
 
-* **`PUT /api/v1/menus/{date_str}/{meal_type}`**
+* **`PUT /menus/{date_str}/{meal_type}`**
   Atualiza uma entrada de menu já existente.
   **Corpo (JSON):**
 
@@ -259,7 +259,7 @@ O token será verificado contra o projeto Firebase definido em `FIREBASE_PROJECT
 
   **Autenticação:** Sim.
 
-* **`DELETE /api/v1/menus/{date_str}/{meal_type}`**
+* **`DELETE /menus/{date_str}/{meal_type}`**
   Remove uma entrada de menu específica (se existir).
   **Autenticação:** Sim (Retorna 204 se removido com sucesso ou nada se não existir).
 
@@ -355,5 +355,5 @@ As tabelas são criadas automaticamente via `Base.metadata.create_all()` na inic
   * No frontend Next.js, configure:
 
     ```env
-    NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+    NEXT_PUBLIC_API_URL=http://localhost:8000
     ```
