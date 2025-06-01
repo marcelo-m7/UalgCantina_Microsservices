@@ -1,4 +1,4 @@
-version: '3.8'
+# docker-compose.yml
 
 services:
   db:
@@ -10,12 +10,8 @@ services:
       - .env
     volumes:
       - db_data:/var/lib/mysql
-      - ./db/init:/docker-entrypoint-initdb.d
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} # Assuming DB_PASSWORD in .env is root password
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD} # Using same password for simplicity, adjust as needed
+      # Se você tiver scripts de inicialização no host, ajuste o caminho abaixo:
+      - ./services/api/app/db/init:/docker-entrypoint-initdb.d
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -26,13 +22,12 @@ services:
       - .env
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} # Use root password to connect to db
     depends_on:
       - db
 
   api:
     build:
-      context: ./api
+      context: ./services/api        # aponta para a pasta que contém o Dockerfile da API
       dockerfile: Dockerfile
     container_name: app_api
     ports:
@@ -41,13 +36,13 @@ services:
       - .env
     depends_on:
       - db
-    # Optional: Volume for live code reloading during development
-    # volumes:
-      - ./api/app:/api/app
+    volumes:
+      # Monta todo o código-fonte no container para hot-reload
+      - ./services/api/app:/app
 
   web:
     build:
-      context: ./web
+      context: ./services/web        # aponta para a pasta que contém o Dockerfile do Next.js
       dockerfile: Dockerfile
     container_name: app_web
     ports:
@@ -56,9 +51,9 @@ services:
       - .env
     depends_on:
       - api
-    # Optional: Volume for live code reloading during development
-    # volumes:
-      - ./web/app:/web/app
+    volumes:
+      # Monta todo o código-fonte do Next.js no container para hot-reload
+      - ./services/web/app:/usr/src/app
 
 volumes:
   db_data:

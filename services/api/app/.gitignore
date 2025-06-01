@@ -5,6 +5,7 @@ __pycache__/
 
 # dotenv files
 .env
+/.venv
 
 # FastAPI/Uvicorn specific
 .uvicorn_reload

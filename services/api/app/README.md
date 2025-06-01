@@ -1,116 +1,359 @@
-# Menu API
+# API
 
-This project is a FastAPI-based backend API for managing restaurant menus, dishes, and allergens. It integrates with a MySQL database for data storage and uses Firebase Admin SDK for authentication for administrative operations.
+## Tecnologias Utilizadas
 
-## Technologies Used
+* **FastAPI:** Framework de alto desempenho para construção de APIs.
+* **SQLAlchemy:** ORM para interagir com o banco MySQL.
+* **MySQL (pymysql):** Banco de dados relacional para armazenar menus, pratos e alergénios.
+* **Google Auth / Firebase:** Biblioteca para verificar ID Tokens do Firebase nas rotas protegidas.
+* **Uvicorn:** ASGI server para executar a aplicação FastAPI.
+* **python-dotenv:** Para carregar variáveis de ambiente a partir de um arquivo `.env`.
 
-*   **FastAPI:** High-performance web framework for building APIs.
-*   **SQLAlchemy:** ORM (Object-Relational Mapper) for interacting with the MySQL database.
-*   **MySQL:** Relational database used for storing menu, dish, and allergen data.
-*   **Firebase Admin SDK:** Used for verifying user authentication tokens for protected routes.
-*   **Uvicorn:** ASGI server to run the FastAPI application.
-*   **python-dotenv:** For loading environment variables from a `.env` file.
+## Estrutura de Pastas
 
-## Setup and Installation
-
-1.  **Clone the repository:**
-    
-```bash
-git clone <repository_url>
-    cd <project_directory>/project/api
+```
+backend/
+├─ app.py
+├─ config.py
+├─ database.py
+├─ models.py
+├─ schemas.py
+├─ crud.py
+├─ deps.py
+├─ requirements.txt
+└─ .env.example
 ```
 
-2.  **Create a virtual environment (recommended):**
-    
-```bash
-python -m venv venv
+* **app.py**: Ponto de entrada da API, registra rotas e configura CORS.
+* **config.py**: Carrega variáveis de ambiente (.env) e fornece a URL de conexão com o MySQL.
+* **database.py**: Configura engine e sessão do SQLAlchemy e executa `create_all()` para criar tabelas.
+* **models.py**: Define as tabelas SQLAlchemy (Allergen, Dish, MenuEntry) e seus relacionamentos.
+* **schemas.py**: Modelos Pydantic para validação de dados de entrada/saída (Allergen, Dish, MenuEntry).
+* **crud.py**: Funções de CRUD (create, read, update, delete) para cada modelo.
+* **deps.py**: Dependências do FastAPI, incluindo sessão do banco e verificação de token Firebase.
+* **requirements.txt**: Lista de dependências Python usadas pelo projeto.
+* **.env.example**: Exemplo de variáveis de ambiente necessárias.
+
+## Pré-requisitos
+
+* Python 3.10+
+* MySQL acessível (local ou remoto)
+* Conta e projeto Firebase configurado (apenas para geração de ID tokens no frontend)
+* Git (para clonar o repositório)
+
+## Configuração e Instalação
+
+1. **Clone o repositório:**
+
+   ```bash
+   git clone <repository_url>
+   cd <project_directory>/backend
+   ```
+
+2. **Crie um ambiente virtual (recomendado):**
+
+   ```bash
+   python -m venv venv
+   ```
+
+3. **Ative o ambiente virtual:**
+
+   * No Windows:
+
+     ```bash
+     venv\Scripts\activate
+     ```
+   * No macOS/Linux:
+
+     ```bash
+     source venv/bin/activate
+     ```
+
+4. **Instale as dependências:**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. **Configure as variáveis de ambiente:**
+
+   * Copie o exemplo de arquivo `.env.example` para `.env`:
+
+     ```bash
+     cp .env.example .env
+     ```
+   * Edite o arquivo `.env` e preencha com as credenciais corretas do MySQL e o seu `FIREBASE_PROJECT_ID`.
+
+   Exemplo de `.env` final:
+
+   ```env
+   # Configuração do MySQL
+   MYSQL_USER=cantina_user
+   MYSQL_PASSWORD=senhaSegura123
+   MYSQL_HOST=localhost
+   MYSQL_PORT=3306
+   MYSQL_DB=cantina_db
+
+   # Configuração do Firebase
+   FIREBASE_PROJECT_ID=seu-projeto-firebase-id
+
+   # CORS (origens permitidas pela API, separadas por vírgula)
+   ALLOWED_ORIGINS=http://localhost:3000
+   ```
+
+## Como Executar a API
+
+1. **Crie as tabelas no banco (opcional):**
+   O `init_db()` em `database.py` já chama `Base.metadata.create_all()`, então basta iniciar a aplicação e as tabelas serão criadas automaticamente se não existirem.
+
+2. **Inicie o servidor FastAPI com Uvicorn:**
+
+   ```bash
+   uvicorn app:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+3. **Acesse a documentação interativa (Swagger UI):**
+   Abra no navegador: `http://localhost:8000/docs`
+
+## Endpoints da API
+
+Todos os endpoints estão sob o prefixo `/api/v1`.
+
+### Rotas Públicas
+
+* **`GET /api/v1/allergens/`**
+  Retorna a lista de todos os alergénios.
+  **Autenticação:** Nenhuma.
+
+* **`GET /api/v1/dishes/`**
+  Retorna a lista de todos os pratos (incluindo campos básicos e IDs de alergénios).
+  **Autenticação:** Nenhuma.
+
+* **`GET /api/v1/dishes/{dish_id}`**
+  Retorna os detalhes de um prato específico, incluindo lista de alergénios.
+  **Autenticação:** Nenhuma.
+
+* **`GET /api/v1/public/weekly/`**
+  Retorna todos os registros de `MenuEntry`. O frontend pode filtrar por data (`date`) e tipo de refeição (`meal_type`).
+  **Autenticação:** Nenhuma.
+
+### Rotas Protegidas (requerem ID Token do Firebase)
+
+As rotas de escrita exigem um header no formato:
+
+```
+Authorization: Bearer <ID_TOKEN_DO_FIREBASE>
 ```
 
-3.  **Activate the virtual environment:**
-    *   On Windows:
-        
-```bash
-venv\Scripts\activate
-```
-    *   On macOS and Linux:
-        
-```bash
-source venv/bin/activate
-```
+O token será verificado contra o projeto Firebase definido em `FIREBASE_PROJECT_ID`. Se inválido ou ausente, a API retorna 401.
 
-4.  **Install dependencies:**
-    
-```bash
-pip install -r requirements.txt
-```
+* **`POST /api/v1/allergens/`**
+  Cria um novo alergénio.
+  **Corpo (JSON):**
 
-5.  **Set up environment variables:**
-    *   Create a `.env` file in the `project/api` directory by copying the `.env.example` file:
-        
-```bash
-cp .env.example .env
-```
-    *   Edit the `.env` file and fill in your database credentials and the path to your Firebase service account key file.
+  ```json
+  {
+    "id": "allergen-uuid-ou-ulid",
+    "name": "Glúten",
+    "icon": "wheat",
+    "description": "Contém trigo"
+  }
+  ```
 
-## Running the API
+  **Autenticação:** Sim.
 
-Navigate to the `project/api` directory in your terminal (make sure your virtual environment is active) and run the API using Uvicorn:
+* **`PUT /api/v1/allergens/{allergen_id}`**
+  Atualiza um alergénio existente (qualquer campo enviado no corpo será modificado).
+  **Corpo (JSON):**
 
-```bash
-uvicorn main:app --reload
-```
+  ```json
+  {
+    "name": "Novo Nome",
+    "icon": "novo_icon",
+    "description": "Nova descrição"
+  }
+  ```
 
-The API will be running at `http://127.0.0.1:8000`.
+  **Autenticação:** Sim.
 
-## API Endpoints
+* **`DELETE /api/v1/allergens/{allergen_id}`**
+  Remove um alergénio.
+  **Autenticação:** Sim (Retorna 204 se removido com sucesso ou nada se não encontrado).
 
-The API provides the following endpoints under the `/api/v1` prefix:
+* **`POST /api/v1/dishes/`**
+  Cria um novo prato.
+  **Corpo (JSON):**
 
-*   **`/api/v1/allergens/`**:
-    *   `GET`: Retrieve a list of all allergens (Public).
-    *   `POST`: Create a new allergen (Authenticated - Admin/Editor).
-    *   `PUT /{allergen_id}`: Update an existing allergen (Authenticated - Admin/Editor).
-    *   `DELETE /{allergen_id}`: Delete an allergen (Authenticated - Admin/Editor).
+  ```json
+  {
+    "id": "dish-uuid-ou-ulid",
+    "name": "Frango Grelhado",
+    "type": "carne",
+    "description": "Frango com ervas",
+    "price": 12.5,
+    "kcals": 450,
+    "allergen_ids": ["allergen-id-1", "allergen-id-2"]
+  }
+  ```
 
-*   **`/api/v1/dishes/`**:
-    *   `GET`: Retrieve a list of all dishes, including their associated allergens (Public).
-    *   `POST`: Create a new dish (Authenticated - Admin/Editor).
-    *   `PUT /{dish_id}`: Update an existing dish (Authenticated - Admin/Editor).
-    *   `DELETE /{dish_id}`: Delete a dish (Authenticated - Admin/Editor).
+  **Autenticação:** Sim.
 
-*   **`/api/v1/menus/`**:
-    *   `/api/v1/menus/public/weekly/`:
-        *   `GET`: Retrieve the current week's menu (Public).
-    *   `/api/v1/menus/weekly-admin/`:
-        *   `GET`: Retrieve a weekly menu for a specified date range (Authenticated - Admin/Editor).
-    *   `/api/v1/menus/day/{date_str}/{meal_type}`:
-        *   `PUT`: Create or update a menu entry for a specific date and meal type (Authenticated - Admin/Editor).
-    *   `/api/v1/menus/entry/{entry_id}`:
-        *   `DELETE`: Delete a specific menu entry by ID (Authenticated - Admin/Editor).
+* **`PUT /api/v1/dishes/{dish_id}`**
+  Atualiza um prato existente (qualquer campo enviado no corpo será modificado).
+  **Corpo (JSON):**
 
-## Database Schema
+  ```json
+  {
+    "name": "Novo Nome",
+    "price": 15.0,
+    "allergen_ids": ["outro-allergen-id"]
+  }
+  ```
 
-The MySQL database includes the following tables:
+  **Autenticação:** Sim.
 
-*   **`users`**: Stores user information (id, name, email, role, created\_at).
-*   **`allergens`**: Stores allergen details (id, name, icon, description).
-*   **`dishes`**: Stores dish details (id, name, type, description, price, kcals).
-*   **`dish_allergens`**: A linking table for the many-to-many relationship between `dishes` and `allergens` (dish\_id, allergen\_id).
-*   **`menu_entries`**: Stores daily menu entries for lunch and dinner, linking to dishes (id, date, meal\_type, main\_dish\_id, alt\_dish\_id, dessert\_id, sopa\_id, notes).
+* **`DELETE /api/v1/dishes/{dish_id}`**
+  Remove um prato.
+  **Autenticação:** Sim (Retorna 204 se removido com sucesso ou nada se não encontrado).
 
-## Authentication
+* **`GET /api/v1/menus/{date_str}/{meal_type}`**
+  Consulta uma entrada de menu específica para uma data e tipo de refeição.
 
-The API uses Firebase Authentication to secure administrative endpoints.
+  * `date_str`: formato `YYYY-MM-DD`
+  * `meal_type`: `"almoco"` ou `"jantar"`
+    **Exemplo:** `/api/v1/menus/2025-06-01/almoco`
+    **Autenticação:** Sim.
 
-1.  **Obtain a Firebase Service Account Key:**
-    *   Go to the Firebase console (console.firebase.google.com).
-    *   Select your project.
-    *   Click on the gear icon (Project settings).
-    *   Go to the 'Service accounts' tab.
-    *   Click on 'Generate new private key'.
-    *   Click 'Generate key' to download a JSON file containing your service account key.
+* **`POST /api/v1/menus/`**
+  Cria uma nova entrada de menu para data e tipo de refeição.
+  **Corpo (JSON):**
 
-2.  **Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable:**
-    *   In your `.env` file, set the `GOOGLE_APPLICATION_CREDENTIALS` variable to the absolute path of the downloaded JSON file. This file contains the credentials needed for the Firebase Admin SDK to verify tokens. Keep this file secure.
+  ```json
+  {
+    "id": "menuentry-uuid-ou-ulid",
+    "date": "2025-06-01",
+    "meal_type": "almoco",
+    "main_dish_id": "uuid-prato-principal",
+    "alt_dish_id": "uuid-prato-alternativo",       // opcional
+    "dessert_id": "uuid-sobremesa",
+    "sopa_id": "uuid-sopa",                        // opcional
+    "notes": "Sem glúten hoje"
+  }
+  ```
 
-The API's protected routes require a valid Firebase ID token in the `Authorization: Bearer <token>` header. The `verify_token` dependency in `auth.py` validates the token and checks for the presence of a valid 'role' claim ('admin' or 'editor') and email verification. Only users with these roles and a verified email can access authenticated endpoints.
+  **Autenticação:** Sim.
+
+* **`PUT /api/v1/menus/{date_str}/{meal_type}`**
+  Atualiza uma entrada de menu já existente.
+  **Corpo (JSON):**
+
+  ```json
+  {
+    "main_dish_id": "novo-uuid-prato",
+    "alt_dish_id": null,
+    "dessert_id": "novo-uuid-sobremesa",
+    "sopa_id": "novo-uuid-sopa",
+    "notes": "Atualização de nota"
+  }
+  ```
+
+  **Autenticação:** Sim.
+
+* **`DELETE /api/v1/menus/{date_str}/{meal_type}`**
+  Remove uma entrada de menu específica (se existir).
+  **Autenticação:** Sim (Retorna 204 se removido com sucesso ou nada se não existir).
+
+## Esquema do Banco de Dados
+
+A estrutura de tabelas no MySQL é:
+
+* **`allergens`**
+
+  * `id` (VARCHAR(36), PK)
+  * `name` (VARCHAR(100), UNIQUE, NOT NULL)
+  * `icon` (VARCHAR(200), NULL)
+  * `description` (TEXT, NULL)
+
+* **`dishes`**
+
+  * `id` (VARCHAR(36), PK)
+  * `name` (VARCHAR(100), UNIQUE, NOT NULL)
+  * `type` (ENUM: `carne`, `peixe`, `vegetariano`, `vegan`, `sobremesa`, `sopa`, `bebida`)
+  * `description` (TEXT, NULL)
+  * `price` (FLOAT, NOT NULL)
+  * `kcals` (INT, NULL)
+
+* **`dish_allergen`** (tabela de associação many-to-many)
+
+  * `dish_id` (VARCHAR(36), FK → `dishes.id`)
+  * `allergen_id` (VARCHAR(36), FK → `allergens.id`)
+
+* **`menu_entries`**
+
+  * `id` (VARCHAR(36), PK)
+  * `date` (DATE, NOT NULL)
+  * `meal_type` (VARCHAR(10), NOT NULL) – valores esperados: `"almoco"` ou `"jantar"`
+  * `main_dish_id` (VARCHAR(36), FK → `dishes.id`, NOT NULL)
+  * `alt_dish_id` (VARCHAR(36), FK → `dishes.id`, NULL)
+  * `dessert_id` (VARCHAR(36), FK → `dishes.id`, NOT NULL)
+  * `sopa_id` (VARCHAR(36), FK → `dishes.id`, NULL)
+  * `notes` (TEXT, NULL)
+
+As tabelas são criadas automaticamente via `Base.metadata.create_all()` na inicialização da API.
+
+## Autenticação e Autorização
+
+1. **Como funciona a verificação de token do Firebase**
+
+   * O frontend Next.js deve obter um ID Token válido do Firebase (usando Firebase Auth) após o login do usuário.
+   * Em todas as requisições a rotas protegidas, deverá enviar o header:
+
+     ```
+     Authorization: Bearer <ID_TOKEN_DO_FIREBASE>
+     ```
+   * Na rota, o `Depends(verify_firebase_token)` no `deps.py` faz:
+
+     * Validação da assinatura e expiração do token.
+     * Verifica se o `issuer` (iss) corresponde ao seu projeto (via `FIREBASE_PROJECT_ID`).
+     * Retorna as *claims* decodificadas se o token for válido.
+
+2. **Controle de Acesso / Perfis**
+
+   * Atualmente, não há distinção de perfis (admin/editor) codificada no backend — qualquer token válido do Firebase consegue acessar as rotas protegidas.
+   * Caso queira controlar por perfil, adicione checagem de `claims.get("role")` dentro de `get_current_user()` em `deps.py`, por exemplo:
+
+     ```python
+     def get_current_user(claims: dict = Depends(verify_firebase_token)):
+         role = claims.get("role")
+         if role not in ("admin", "editor"):
+             raise HTTPException(status_code=403, detail="Permissão insuficiente")
+         return claims
+     ```
+   * Nesse caso, você deve atribuir custom claims de `role` (admin/editor) aos usuários diretamente no Firebase.
+
+## Observações Finais
+
+* **Sem migrações automáticas (Alembic)**
+
+  * Este projeto utiliza `Base.metadata.create_all()` para criar tabelas ao iniciar.
+  * Se alterar os modelos, será necessário recriar manualmente o banco ou dropar tabelas antigas.
+
+* **IDs**
+
+  * Espera-se que o frontend envie o campo `id` como string (UUID ou ULID).
+  * Se preferir gerar os IDs no backend, modifique as funções de `create_*` em `crud.py` para usar, por exemplo, `import uuid` e `str(uuid.uuid4())`.
+
+* **CORS**
+
+  * A variável `ALLOWED_ORIGINS` no `.env` aceita múltiplas origens separadas por vírgula (será convertida para lista de strings automaticamente).
+  * Ajuste conforme o(s) domínio(s) do seu frontend.
+
+* **Testes e Desenvolvimento**
+
+  * Após fazer alterações nos modelos, reinicie o servidor para recriar as tabelas (ou drope-as manualmente).
+  * Utilize o Swagger UI (`/docs`) para testar interativamente as rotas.
+  * No frontend Next.js, configure:
+
+    ```env
+    NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+    ```

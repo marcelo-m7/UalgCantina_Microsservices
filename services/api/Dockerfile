@@ -1,21 +1,23 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+# services/api/Dockerfile
 
-# Set the working directory in the container
+# 1. Imagem base Python (slim)
+FROM python:3.12-slim
+
+# 2. Define diretório de trabalho dentro do container
 WORKDIR /api/app
 
-# Copy the requirements file into the container
-COPY requirements.txt /api/app/
+# 3. Copia apenas o requirements.txt para aproveitar o cache do Docker
+COPY ./app/requirements.txt /api/app/requirements.txt
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# 4. Instala dependências do Python
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r /api/app/requirements.txt
 
-# Copy the rest of the application code into the container
+# 5. Copia todo o restante do código da API
 COPY ./app /api/app
 
-# Make port 8000 available to the outside world
+# 6. Expõe a porta usada pelo FastAPI
 EXPOSE 8000
 
-# Run the application
-# Assuming your main FastAPI app instance is named 'app' in 'main.py'
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# 7. Comando padrão para iniciar a API em modo de desenvolvimento (hot-reload)
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
