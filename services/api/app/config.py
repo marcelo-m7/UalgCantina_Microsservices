@@ -1,19 +1,21 @@
-# config.py
+# services/api/app/config.py
+
 from pydantic_settings import BaseSettings
-from typing import List
+
 
 class Settings(BaseSettings):
-    # Variáveis de ambiente lidas do .env
+    # Variáveis de conexão MySQL
     MYSQL_USER: str
     MYSQL_PASSWORD: str
     MYSQL_HOST: str = "localhost"
     MYSQL_PORT: int = 3306
     MYSQL_DB: str
 
+    # Firebase
     FIREBASE_PROJECT_ID: str
 
-    # Origens permitidas no CORS (separadas por vírgula)
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000"]
+    # CORS
+    ALLOWED_ORIGINS: str = "http://localhost:3000"
 
     class Config:
         env_file = ".env"
@@ -24,5 +26,14 @@ class Settings(BaseSettings):
             f"mysql+pymysql://{self.MYSQL_USER}:{self.MYSQL_PASSWORD}"
             f"@{self.MYSQL_HOST}:{self.MYSQL_PORT}/{self.MYSQL_DB}"
         )
+
+    @property
+    def allowed_origins_list(self) -> list[str]:
+        return [
+            origin.strip()
+            for origin in self.ALLOWED_ORIGINS.split(",")
+            if origin.strip()
+        ]
+
 
 settings = Settings()

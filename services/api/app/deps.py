@@ -1,19 +1,17 @@
-# deps.py
-from fastapi import Depends, HTTPException, status, Request
+# services/api/app/deps.py
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
-from database import SessionLocal
 import google.auth.transport.requests
 import google.oauth2.id_token
+
+from database import SessionLocal
 from config import settings
 
-CERTS_URL = "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com"
-ISSUER = f"https://securetoken.google.com/{settings.FIREBASE_PROJECT_ID}"
 
-
+# ------------- Banco de dados -------------
 def get_db():
-    """
-    Dependência que retorna uma sessão do SQLAlchemy.
-    """
     db = SessionLocal()
     try:
         yield db
@@ -21,41 +19,48 @@ def get_db():
         db.close()
 
 
-def verify_firebase_token(request: Request) -> dict:
+# ------------- Autenticação Firebase -------------
+security = HTTPBearer(auto_error=False)
+
+def verify_token(
+    credentials: HTTPAuthorizationCredentials = Depends(security)
+):
     """
-    Verifica o header Authorization: Bearer <token> usando o ID token do Firebase.
-    Retorna o payload decodificado (claims) se válido. Caso contrário, levanta 401.
+    Dependência que extrai o token Firebase do header Authorization: Bearer <token>
+    e verifica validade e claims (role/email verificado). 
+    Lança 401 ou 403 em caso de falha.
     """
-    auth_header: str | None = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
+    if not credentials or not credentials.scheme.lower() == "bearer":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing or invalid Authorization header"
+            detail="Token de autenticação faltando ou inválido",
         )
+    token = credentials.credentials
 
-    token = auth_header.split(" ", 1)[1]
     try:
-        request_adapter = google.auth.transport.requests.Request()
-        decoded = google.oauth2.id_token.verify_firebase_token(
-            token,
-            request_adapter,
-            audience=settings.FIREBASE_PROJECT_ID
-        )
-        if decoded.get("iss") != ISSUER:
-            raise ValueError("Issuer inválido")
-    except Exception as e:
+        # Verifica no Google os tokens <https://firebase.google.com/docs/auth/admin/verify-id-tokens>
+        request = google.auth.transport.requests.Request()
+        decoded = google.oauth2.id_token.verify_firebase_token(token, request, settings.FIREBASE_PROJECT_ID)
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Token inválido: {e}"
+            detail="Token inválido ou expirado",
         )
 
+    # Verifica se e-mail está verificado
+    if not decoded.get("email_verified", False):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="E-mail não verificado",
+        )
+
+    # Verifica se existe claim “role” e se é admin ou editor
+    role = decoded.get("role")
+    if role not in ["admin", "editor"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Permissão insuficiente",
+        )
+
+    # Se tudo ok, devolve o objeto decodificado (pode conter email, uid, role, etc.)
     return decoded
-
-
-def get_current_user(claims: dict = Depends(verify_firebase_token)) -> dict:
-    """
-    Retorna o dicionário de claims (uid, email, custom claims do Firebase).
-    Se precisar de controle de perfis, adicione aqui:
-        role = claims.get("role"); verificar permissões etc.
-    """
-    return claims
