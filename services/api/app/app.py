@@ -5,13 +5,13 @@ from sqlalchemy.orm import Session
 from datetime import date
 
 import config
-import database
+# import database
 import crud
 import schemas
 from deps import get_db, get_current_user
 
 # Cria tabelas (se não existirem)
-database.init_db()
+# database.init_db()
 
 app = FastAPI(title="API Simplificada - Cantina")
 
