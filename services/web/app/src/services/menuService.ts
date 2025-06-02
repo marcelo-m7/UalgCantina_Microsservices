@@ -6,13 +6,20 @@ import type { WeeklyMenu, MenuEntry, DayMenu } from '@/lib/types';
 // The '/public/weekly' endpoint is for public access, might not need auth.
 // The admin endpoint for menus would be different, e.g., '/menus/weekly'
 
+// ✅ Buscar o menu “público” que já vem como objeto único
 export const getPublicWeeklyMenu = async (): Promise<WeeklyMenu> => {
-  const response = await apiClient.get('/weekly-menus/'); // Ensure this matches your public API endpoint
-  // TODO: Data transformation might be needed here if API structure differs significantly from WeeklyMenu type
-  // For example, resolving dish details if only IDs are returned.
-  // For now, assume the API returns a compatible structure or this function will be adapted.
-  return response.data;
+  const { data } = await apiClient.get('/public/weekly/');
+  // garante que sempre exista o array days, nem que vazio
+  return { ...data, days: data.days ?? [] };
 };
+
+/* — se quiser o endpoint de gestão —
+   listagem de TODOS os menus semanais (array) */
+export const listWeeklyMenus = async (): Promise<WeeklyMenu[]> => {
+  const { data } = await apiClient.get('/weekly-menus/');
+  return data;
+};
+
 
 // Example for admin-specific fetching if needed, may require authentication
 export const getAdminWeeklyMenu = async (): Promise<WeeklyMenu> => {
