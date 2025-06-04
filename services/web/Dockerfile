@@ -12,6 +12,8 @@ COPY ./app/package*.json ./
 # 4. Instala dependências do Next.js
 RUN npm install
 
+# RUN npm run build
+
 # 5. Copia todo o restante do código do Next.js
 COPY ./app /usr/src/app
 
@@ -20,3 +22,4 @@ EXPOSE 3000
 
 # 7. Comando padrão para rodar o Next.js em modo de desenvolvimento
 CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "start"]

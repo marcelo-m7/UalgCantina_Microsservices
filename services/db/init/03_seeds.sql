@@ -1,4 +1,5 @@
--- services/db/init/02_seeds.sql
+-- services/db/init/03_seeds.sql
+
 -- USE cantina_db;
 
 -- Desliga verificações para evitar erros de FK durante o seed
