@@ -1,0 +1,44 @@
+# Node modules and package managers
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.pnp.*
+.yarn/
+.pnpm-debug.log*
+
+# Next.js build output
+.next/
+out/
+build/
+
+# Coverage and testing
+coverage/
+.genkit/
+
+# Local env and secrets
+.env
+.env.*
+.next-env.d.ts
+*.tsbuildinfo
+
+# Firebase
+firebase-debug.log
+firestore-debug.log
+
+# Misc files
+.DS_Store
+*.pem
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Vercel & deployment
+.vercel
+
+# IDE/editor
+.vscode/
+.idea/
