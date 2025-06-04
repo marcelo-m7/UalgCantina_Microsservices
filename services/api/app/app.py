@@ -36,17 +36,8 @@ def get_public_weekly_menu(db: Session = Depends(get_db)):
         .first()
     )
     if not weekly:
-        raise HTTPException(404, "Sem menu nesta semana")
+        return None
     return weekly       # agora contém days=[]
-
-
-
-# ==================================================
-#   As tabelas JÁ foram criadas pelos scripts do MySQL
-#   Portanto, não chamamos Base.metadata.create_all(). 
-#   Mantemos o import de models apenas para garantir ORM mapping.
-# ==================================================
-# Base.metadata.create_all(bind=engine)
 
 
 # --- ROTAS ALLERGENS (Público: GET; Protegido: POST, PUT, DELETE) ---
