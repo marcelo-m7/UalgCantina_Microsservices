@@ -1,6 +1,5 @@
 // src/app/(admin)/admin/menus/page.tsx
 "use client";
-
 import type { ChangeEvent } from "react";
 import React, { useState } from "react";
 import type {
@@ -136,25 +135,28 @@ export default function MenusPage() {
   });
 
   /* ---------- handlers ---------- */
-  const handleEditMeal = (date: string, mealType: "lunch" | "dinner") => {
-    const day = weeklyMenu?.days.find((d) => d.date === date);
-    const meal: MenuEntry | undefined =
-      mealType === "lunch" ? day?.lunch : day?.dinner;
+const handleEditMeal = (date: string, mealType: "lunch" | "dinner") => {
 
-    const baseForm: MenuDayEditFormData = {
-      date,
-      mealType,
-      mainDishId: meal?.mainDishId ?? "",
-      dessertId: meal?.dessertId ?? "",
-      sopaId: meal?.sopaId ?? undefined,
-      altDishId: meal?.altDishId ?? undefined,
-      notes: meal?.notes ?? "",
-    };
+const day = weeklyMenu?.days.find((d) => d.date === date);
+const meal: MenuEntry | undefined =
+  mealType === "lunch" ? day?.lunchEntry ?? undefined : day?.dinnerEntry ?? undefined;
 
-    setEditingMenuEntry(baseForm);
-    setCurrentEditForm(baseForm);
-    setIsEditDialogOpen(true);
+
+  const baseForm: MenuDayEditFormData = {
+    date,
+    mealType,
+    mainDishId: meal?.mainDishId ?? "",
+    dessertId: meal?.dessertId ?? "",
+    sopaId: meal?.sopaId ?? undefined,
+    altDishId: meal?.altDishId ?? undefined,
+    notes: meal?.notes ?? "",
   };
+
+  setEditingMenuEntry(baseForm);
+  setCurrentEditForm(baseForm);
+  setIsEditDialogOpen(true);
+};
+
 
   const handleFormChange = (
     field: keyof MenuDayEditFormData,
@@ -319,8 +321,8 @@ export default function MenusPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {(["lunch", "dinner"] as const).map((mealType) => {
-                  const meal =
-                    mealType === "lunch" ? day.lunch : day.dinner;
+const meal = mealType === "lunch" ? day.lunchEntry : day.dinnerEntry;
+
                   return (
                     <div
                       key={mealType}
@@ -455,4 +457,3 @@ export default function MenusPage() {
     </div>
   );
 }
-Z

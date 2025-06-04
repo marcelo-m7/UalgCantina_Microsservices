@@ -170,31 +170,41 @@ export default function PublicMenuPage() {
     return hasSelectedAllergen ? undefined : dish;
   };
 
-  const filteredMenu = useMemo(() => {
-    if (!weeklyMenu) return null;
-    return {
-      ...weeklyMenu,
-      days: weeklyMenu.days.map(day => {
-        const filterMenuEntry = (entry?: MenuEntry): MenuEntry | undefined => {
-          if (!entry) return undefined;
-          const filteredSopa = filterDish(entry.sopa);
-          const filteredMainDish = filterDish(entry.mainDish);
-          const filteredAltDish = filterDish(entry.altDish);
-          const filteredDessert = filterDish(entry.dessert);
-          if (!filteredMainDish && !filteredAltDish && !filteredSopa && !filteredDessert && (entry.mainDishId || entry.altDishId || entry.sopaId || entry.dessertId)) {
-            return { ...entry, sopa: undefined, mainDish: undefined, altDish: undefined, dessert: undefined };
-          }
-          if (!filteredMainDish && !filteredAltDish && !filteredSopa && !filteredDessert) return undefined;
-          return { ...entry, sopa: filteredSopa, mainDish: filteredMainDish, altDish: filteredAltDish, dessert: filteredDessert };
-        };
-        return {
-          ...day,
-          lunch: filterMenuEntry(day.lunch),
-          dinner: filterMenuEntry(day.dinner),
-        };
-      }),
+// ⬇️ substitua TODO o bloco filteredMenu por este
+const filteredMenu = useMemo(() => {
+  if (!weeklyMenu) return null;
+
+  const filterMenuEntry = (entry?: MenuEntry): MenuEntry | undefined => {
+    if (!entry) return undefined;
+
+    const filtered = {
+      sopa:     filterDish(entry.sopa),
+      mainDish: filterDish(entry.mainDish),
+      altDish:  filterDish(entry.altDish),
+      dessert:  filterDish(entry.dessert),
     };
-  }, [weeklyMenu, selectedAllergens, allergens]);
+
+    const allGone =
+      !filtered.sopa && !filtered.mainDish && !filtered.altDish && !filtered.dessert;
+
+    if (allGone) {
+      // mantém o objeto para mostrar mensagem “filtrado”
+      return { ...entry, ...filtered };
+    }
+
+    return { ...entry, ...filtered };
+  };
+
+  return {
+    ...weeklyMenu,
+    days: weeklyMenu.days.map((day) => ({
+      ...day,
+      // 🔄 renomeamos aqui
+      lunch:  filterMenuEntry(day.lunchEntry),
+      dinner: filterMenuEntry(day.dinnerEntry),
+    })),
+  };
+}, [weeklyMenu, selectedAllergens]);
 
   const getDayName = (dateString?: string) => {
     if (!dateString) return "Data inválida";
