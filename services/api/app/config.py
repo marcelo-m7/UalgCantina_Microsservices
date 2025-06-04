@@ -29,9 +29,16 @@ class Settings(BaseSettings):
 
     @property
     def allowed_origins_list(self) -> list[str]:
+        """Return CORS origins as a list.
+
+        Pydantic will populate ``allowed_origins`` from the ``ALLOWED_ORIGINS``
+        environment variable. The attribute name is ``allowed_origins`` in the
+        model, therefore we should reference that attribute here. Using the
+        upper‑case variant would raise ``AttributeError`` at runtime.
+        """
         return [
             origin.strip()
-            for origin in self.ALLOWED_ORIGINS.split(",")
+            for origin in self.allowed_origins.split(",")
             if origin.strip()
         ]
 
