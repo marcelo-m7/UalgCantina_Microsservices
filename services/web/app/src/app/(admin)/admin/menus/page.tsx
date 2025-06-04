@@ -69,7 +69,7 @@ export default function MenusPage() {
 
   const handleEditMeal = (dayDate: string, mealType: 'lunch' | 'dinner') => {
     const day = weeklyMenu?.days.find(d => d.date === dayDate);
-    const meal = day?.[mealType];
+    const meal = mealType === 'lunch' ? day?.lunchEntry : day?.dinnerEntry;
     if (meal) {
       const formData: MenuDayEditFormData = {
         date: dayDate,
@@ -226,40 +226,41 @@ export default function MenusPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {weeklyMenu.days.map(day => (
-            <Card key={day.date} className="shadow-md">
-              <CardHeader>
-                <CardTitle className="text-lg">{getDayName(day.date)}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {(['lunch', 'dinner'] as const).map(mealType => {
-                  const meal = day[mealType];
-                  // Show edit button even if meal is undefined, to allow creating it
-                  return (
-                    <div key={mealType} className="p-3 border rounded-md bg-muted/30">
-                      <div className="flex justify-between items-center mb-2">
-                        <h4 className="text-md font-semibold capitalize text-primary">{mealType === 'lunch' ? 'Almoço' : 'Jantar'}</h4>
-                        <Button variant="outline" size="sm" onClick={() => handleEditMeal(day.date, mealType)} disabled={updateMenuMutation.isPending}>
-                          <Edit className="mr-2 h-3 w-3" /> {meal ? 'Editar' : 'Adicionar'}
-                        </Button>
-                      </div>
-                      {meal ? (
-                        <div className="space-y-1 text-sm">
-                          <p><strong>Sopa:</strong> <DishInfo dish={meal.sopa} /></p>
-                          <p><strong>Prato Principal:</strong> <DishInfo dish={meal.mainDish} /></p>
-                          <p><strong>Prato Alternativo:</strong> <DishInfo dish={meal.altDish} /></p>
-                          <p><strong>Sobremesa:</strong> <DishInfo dish={meal.dessert} /></p>
-                          {meal.notes && <p className="italic text-xs text-accent mt-1 flex items-center gap-1"><Info size={12}/> {meal.notes}</p>}
-                        </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground py-2">Não definido. Clique em Adicionar para configurar.</p>
-                      )}
+        {weeklyMenu.days.map(day => (
+          <Card key={day.date} className="shadow-md">
+            <CardHeader>
+              <CardTitle className="text-lg">{getDayName(day.date)}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {(['lunch', 'dinner'] as const).map(mealType => {
+                // ATENÇÃO: Aqui é a mudança!
+                const meal = mealType === 'lunch' ? day.lunchEntry : day.dinnerEntry;
+                return (
+                  <div key={mealType} className="p-3 border rounded-md bg-muted/30">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-md font-semibold capitalize text-primary">{mealType === 'lunch' ? 'Almoço' : 'Jantar'}</h4>
+                      <Button variant="outline" size="sm" onClick={() => handleEditMeal(day.date, mealType)} disabled={updateMenuMutation.isPending}>
+                        <Edit className="mr-2 h-3 w-3" /> {meal ? 'Editar' : 'Adicionar'}
+                      </Button>
                     </div>
-                  );
-                })}
-              </CardContent>
-            </Card>
-          ))}
+                    {meal ? (
+                      <div className="space-y-1 text-sm">
+                        <p><strong>Sopa:</strong> <DishInfo dish={meal.sopa} /></p>
+                        <p><strong>Prato Principal:</strong> <DishInfo dish={meal.mainDish} /></p>
+                        <p><strong>Prato Alternativo:</strong> <DishInfo dish={meal.altDish} /></p>
+                        <p><strong>Sobremesa:</strong> <DishInfo dish={meal.dessert} /></p>
+                        {meal.notes && <p className="italic text-xs text-accent mt-1 flex items-center gap-1"><Info size={12}/> {meal.notes}</p>}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground py-2">Não definido. Clique em Adicionar para configurar.</p>
+                    )}
+                  </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        ))}
+
         </CardContent>
       </Card>
 

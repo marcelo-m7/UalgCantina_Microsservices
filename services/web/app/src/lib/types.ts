@@ -23,38 +23,39 @@ export interface Dish {
   name: string;
   type: DishType;
   description?: string;
-  price: number; // Ensure this is treated as number
-  kcals?: number | null; // Ensure this is treated as number or null
+  price: number;
+  kcals?: number | null;
   allergenIds?: string[];
-  allergens?: Allergen[]; // Potentially resolved client-side or by API
-  // 'icon' field was for frontend derived icon, API won't have LucideIcon type. 
-  // It can be derived from 'type' or a specific 'icon_name' string from API.
+  allergens?: Allergen[];
 }
 
 export interface MenuEntry {
-  id: string; // This ID might come from the API for the specific entry
+  id: string;
   date: string; // YYYY-MM-DD
   mealType: 'almoco' | 'jantar';
   
   mainDishId: string;
-  mainDish?: Dish; // Resolved dish object
+  mainDish?: Dish;
   
   altDishId?: string;
-  altDish?: Dish; // Resolved dish object
+  altDish?: Dish;
   
   dessertId: string;
-  dessert?: Dish; // Resolved dish object
+  dessert?: Dish;
   
   sopaId?: string;
-  sopa?: Dish; // Resolved dish object
+  sopa?: Dish;
   
   notes?: string;
 }
 
 export interface DayMenu {
   date: string; // YYYY-MM-DD
-  lunch?: MenuEntry;
-  dinner?: MenuEntry;
+  weeklyMenuId: string;
+  lunchEntryId?: string | null;
+  dinnerEntryId?: string | null;
+  lunchEntry?: MenuEntry | null;
+  dinnerEntry?: MenuEntry | null;
 }
 
 export interface WeeklyMenu {
@@ -64,12 +65,11 @@ export interface WeeklyMenu {
   days: DayMenu[];
 }
 
-// For AI Suggestions (remains the same as it's internal to frontend-AI flow)
+// For AI Suggestions
 export interface AISuggestionInput {
   mainDish: string;
   availableSideDishes: string[];
 }
-
 export interface AISuggestionOutput {
   suggestedSideDish: string;
   reasoning: string;
