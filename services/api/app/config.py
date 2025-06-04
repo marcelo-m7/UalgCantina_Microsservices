@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     # MySQL connection variables
     MYSQL_USER: str
     MYSQL_PASSWORD: str
-    MYSQL_HOST: str = "localhost"
+    MYSQL_HOST: str = "db"
     MYSQL_PORT: int = 3306
     MYSQL_DB: str
 
