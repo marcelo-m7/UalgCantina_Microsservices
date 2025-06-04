@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) NOT NULL UNIQUE,
     role ENUM('admin','editor') NOT NULL DEFAULT 'admin',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 2) Tabela de alergênicos (allergens)
 CREATE TABLE IF NOT EXISTS allergens (
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS allergens (
     name VARCHAR(255) NOT NULL UNIQUE,
     icon VARCHAR(255),
     description TEXT
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 3) Tabela de pratos (dishes)
 CREATE TABLE IF NOT EXISTS dishes (
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS dishes (
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     kcals INT
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 4) Tabela de ligação many-to-many entre dishes e allergens
 CREATE TABLE IF NOT EXISTS dish_allergens (
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS dish_allergens (
         ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (allergen_id) REFERENCES allergens(id) 
         ON DELETE CASCADE ON UPDATE CASCADE
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 5) Tabela de entradas de menu de cada dia (menu_entries)
 CREATE TABLE IF NOT EXISTS menu_entries (
@@ -59,14 +59,14 @@ CREATE TABLE IF NOT EXISTS menu_entries (
         ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (sopa_id) REFERENCES dishes(id) 
         ON DELETE RESTRICT ON UPDATE CASCADE
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 6) Tabela de menus semanais (weekly_menus)
 CREATE TABLE IF NOT EXISTS weekly_menus (
     week_id VARCHAR(255) PRIMARY KEY,
     start_date DATE NOT NULL UNIQUE,
     end_date DATE NOT NULL
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 7) Tabela de menus diários vinculados ao menu semanal (day_menus)
 CREATE TABLE IF NOT EXISTS day_menus (
@@ -80,4 +80,4 @@ CREATE TABLE IF NOT EXISTS day_menus (
         ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (dinner_entry_id) REFERENCES menu_entries(id) 
         ON DELETE SET NULL ON UPDATE CASCADE
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -1,10 +1,9 @@
 -- services/db/init/01_init.sql
 
 -- 1) Cria o banco de dados (caso não exista) e seleciona ele
-CREATE DATABASE IF NOT EXISTS cantina
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
-
+CREATE DATABASE IF NOT EXISTS cantina_db
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 
 -- 2) Cria usuário e concede privilégios
 CREATE USER IF NOT EXISTS 'cantina_user'@'%' IDENTIFIED BY 'senhaSegura123';
