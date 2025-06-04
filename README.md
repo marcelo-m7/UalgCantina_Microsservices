@@ -84,31 +84,6 @@ cantinacast/
 *   **.env.example**: Um arquivo de exemplo para as variáveis de ambiente, com placeholders para valores sensíveis.
 *   **docker-compose.yml**: Orquestra os três serviços (`web`, `api`, `db`), definindo suas dependências, portas e volumes.
 
-## Passos de Setup Inicial (Realizados pela AI)
-
-Para configurar a estrutura básica do projeto, a AI realizou os seguintes passos:
-
-1.  Criou a pasta `api` para o código do backend.
-2.  Criou o arquivo `api/db.py` para a configuração da conexão com o banco de dados utilizando SQLAlchemy.
-3.  Criou o arquivo `api/main.py` como ponto de entrada da aplicação FastAPI, incluindo a inicialização do banco de dados e middlewares.
-4.  Criou o arquivo `api/auth.py` para lidar com a lógica de autenticação (ex: via Firebase Admin SDK).
-5.  Criou o arquivo `api/models.py` definindo as classes SQLAlchemy para as entidades `Allergen`, `Dish`, `WeeklyMenu`, `DayMenu`, e `MenuEntry`.
-6.  Criou a pasta `api/routers` para organizar os endpoints da API por entidade.
-7.  Criou o arquivo `api/routers/allergens.py` com um router FastAPI para os endpoints de alérgenos.
-8.  Criou o arquivo `api/routers/dishes.py` com um router FastAPI para os endpoints de pratos.
-9.  Criou o arquivo `api/routers/menus.py` com um router FastAPI para os endpoints de ementas.
-10. Atualizou o arquivo `api/main.py` para importar e incluir os routers criados.
-11. Criou a estrutura de pastas `services/db/init`.
-12. Adicionou scripts SQL em `services/db/init` para criar esquemas e dados iniciais (`00_init.sql`, `01_tables.sql`, `02_seeds.sql`, `03_simple_data.sql`).
-13. Criou o Dockerfile para o frontend em `web/Dockerfile`.
-14. Criou o Dockerfile para o backend em `api/Dockerfile`.
-15. Criou o Dockerfile para o banco de dados em `db/Dockerfile`.
-16. Criou o arquivo `docker-compose.yml` na raiz do projeto para orquestrar os serviços.
-17. Criou o arquivo `.env` na raiz do projeto com variáveis de ambiente de exemplo.
-18. Criou o arquivo `.env.example` na raiz do projeto com placeholders para as variáveis de ambiente.
-
-Esta estrutura fornece uma base sólida para começar a implementar a lógica de negócio e as interfaces de utilizador.
-
 ## Como Executar o Projeto com Docker Compose
 
 Certifique-se de ter o Docker e o Docker Compose instalados.
