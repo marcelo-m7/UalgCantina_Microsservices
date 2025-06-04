@@ -13,8 +13,8 @@ RUN npm install
 EXPOSE 3000
 
 # Inicia o servidor em produção
-CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev"]
 
 # Inicia o servidor com compilação prévia
-# RUN npm run build
-# CMD ["npm", "run", "start"]
+RUN npm run build
+CMD ["npm", "run", "start"]

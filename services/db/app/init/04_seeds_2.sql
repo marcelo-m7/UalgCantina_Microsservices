@@ -1,6 +1,14 @@
+-- 04_seeds_2.sql
+USE cantina_db;
+SET NAMES utf8mb4;
+START TRANSACTION;
+SELECT '➡️  Seed 04_seeds_2.sql iniciado' AS info;
 -- services/db/init/04_seeds.sql
 
 USE cantina_db;
+
+SET FOREIGN_KEY_CHECKS = 0;
+
 -- Semana 23: 2025-06-02 a 2025-06-08
 INSERT IGNORE INTO weekly_menus (week_id, start_date, end_date) VALUES 
 ('week-2025-W23', '2025-06-02', '2025-06-08');
@@ -59,3 +67,7 @@ INSERT IGNORE INTO day_menus (date, weekly_menu_id, lunch_entry_id, dinner_entry
 ('2025-06-13', 'week-2025-W24', 'menu-entry-2025-06-13-almoco', 'menu-entry-2025-06-13-jantar'),
 ('2025-06-14', 'week-2025-W24', 'menu-entry-2025-06-14-almoco', 'menu-entry-2025-06-14-jantar'),
 ('2025-06-15', 'week-2025-W24', 'menu-entry-2025-06-15-almoco', 'menu-entry-2025-06-15-jantar');
+
+SET FOREIGN_KEY_CHECKS = 1;
+COMMIT;
+SELECT '✅ Seed 04_seeds_2.sql concluído' AS info;

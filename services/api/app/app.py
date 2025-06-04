@@ -18,7 +18,7 @@ app = FastAPI(
 )
 
 # Inicializa BD
-# init_db()
+init_db()
 
 # Adiciona CORS
 app.add_middleware(

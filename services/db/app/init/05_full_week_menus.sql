@@ -1,4 +1,8 @@
-
+-- 05_full_week_menus.sql
+USE cantina_db;
+SET NAMES utf8mb4;
+START TRANSACTION;
+SELECT '➡️  Seed 05_full_week_menus.sql iniciado' AS info;
 -- Semana week-2025-W40
 INSERT IGNORE INTO weekly_menus (week_id, start_date, end_date)
 VALUES ('week-2025-W40', '2025-06-02', '2025-06-08')
@@ -92,4 +96,5 @@ VALUES ('2025-06-07', 'week-2025-W40', 'menu-entry-2025-06-07-almoco', 'menu-ent
 -- Sunday 2025-06-08
 INSERT IGNORE INTO day_menus (date, weekly_menu_id, lunch_entry_id, dinner_entry_id)
 VALUES ('2025-06-08', 'week-2025-W40', 'menu-entry-2025-06-08-almoco', 'menu-entry-2025-06-08-jantar');
-
+COMMIT;
+SELECT '✅ Seed 05_full_week_menus.sql concluído' AS info;
