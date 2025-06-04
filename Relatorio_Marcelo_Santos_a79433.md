@@ -26,9 +26,15 @@ O repositório inclui os arquivos `docker-compose.yml`, Dockerfiles para cada se
 
 ## Como Executar
 
-1. Copiar `.env.example` para `.env` e definir as variáveis necessárias (credenciais de base de dados e chaves do Firebase).
-2. Executar `docker-compose up --build` para criar e iniciar os containers.
-3. Aceder ao frontend em `http://localhost:3000` e à documentação da API em `http://localhost:8000/docs`.
+1. Para testar o frontend, lembre-se de inserir o email da sua conta Google na tabela `users` do banco de dados.
+   ```sql
+       INSERT INTO users (name, email, role)
+    VALUES
+      ('Marcelo Santos', 'marcelosouzasantos77@gmail.com', 'admin');
+   ```
+3. Copiar `.env.example` para `.env` e definir as variáveis necessárias (credenciais de base de dados e chaves do Firebase).
+4. Executar `docker-compose up --build` para criar e iniciar os containers.
+5. Aceder ao frontend em `http://localhost:3000` e à documentação da API em `http://localhost:8000/docs`.
 
 ## Considerações Finais
 
