@@ -30,6 +30,7 @@ def verify_token(
     e verifica validade e claims (role/email verificado). 
     Lança 401 ou 403 em caso de falha.
     """
+    print("[DEBUG] Verifying Firebase token")
     if not credentials or not credentials.scheme.lower() == "bearer":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
