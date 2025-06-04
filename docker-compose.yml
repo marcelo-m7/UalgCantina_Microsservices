@@ -2,13 +2,15 @@
 
 services:
   db:
-    image: mysql:8.0
+    build:
+      context: ./services/db
+      dockerfile: Dockerfile
     container_name: app_db
     env_file:
       - .env
     environment:
-      MYSQL_DATABASE: ${MYSQL_DB}      # Ex.: cantina_db
-      MYSQL_USER: ${MYSQL_USER}        # Ex.: cantina_user
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
@@ -19,7 +21,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-
+      
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: app_phpmyadmin
