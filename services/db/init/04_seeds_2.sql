@@ -1,22 +1,62 @@
 -- services/db/init/04_seeds.sql
 
 USE cantina_db;
+-- Semana 23: 2025-06-02 a 2025-06-08
+INSERT INTO weekly_menus (week_id, start_date, end_date) VALUES 
+('week-2025-W23', '2025-06-02', '2025-06-08');
 
--- Inserção de pratos
-INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES ('dish-sopa-chuchu-feijao', 'Sopa de chuchu e feijão vermelho', 'sopa', 'Sopa leve e nutritiva com chuchu e feijão.', 2.5, 120)
-INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES ('dish-calamares-tomate', 'Calamares à Romana com arroz de tomate', 'peixe', 'Calamares crocantes com arroz de tomate.', 7.0, 680)
-INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES ('dish-moqueca-tofu', 'Moqueca de tofu com arroz branco', 'vegan', 'Moqueca vegana rica em sabor.', 6.0, 600)
-INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES ('dish-fruta', 'Fruta', 'sobremesa', 'Fruta fresca da época.', 1.5, 80)
+-- Dias da semana 23
+INSERT INTO menu_entries (id, date, meal_type, main_dish_id, alt_dish_id, dessert_id, sopa_id) VALUES
+('menu-entry-2025-06-02-almoco', '2025-06-02', 'almoco', 'dish-lasanha', 'dish-vegetariano', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-02-jantar', '2025-06-02', 'jantar', 'dish-bacalhau', 'dish-vegan', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-03-almoco', '2025-06-03', 'almoco', 'dish-vegan', 'dish-carne', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-03-jantar', '2025-06-03', 'jantar', 'dish-peixe', 'dish-vegetariano', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-04-almoco', '2025-06-04', 'almoco', 'dish-carne', 'dish-vegan', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-04-jantar', '2025-06-04', 'jantar', 'dish-lasanha', 'dish-vegetariano', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-05-almoco', '2025-06-05', 'almoco', 'dish-peixe', 'dish-vegan', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-05-jantar', '2025-06-05', 'jantar', 'dish-carne', 'dish-vegetariano', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-06-almoco', '2025-06-06', 'almoco', 'dish-vegetariano', 'dish-vegan', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-06-jantar', '2025-06-06', 'jantar', 'dish-lasanha', 'dish-carne', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-07-almoco', '2025-06-07', 'almoco', 'dish-peixe', 'dish-vegetariano', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-07-jantar', '2025-06-07', 'jantar', 'dish-vegan', 'dish-carne', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-08-almoco', '2025-06-08', 'almoco', 'dish-lasanha', 'dish-vegan', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-08-jantar', '2025-06-08', 'jantar', 'dish-peixe', 'dish-vegetariano', 'dish-fruta', 'dish-sopa-peixe');
 
--- Inserção do menu semanal
-INSERT INTO weekly_menus (week_id, start_date, end_date) VALUES ('week-2025-W23', '2025-06-03', '2025-06-09')
+INSERT INTO day_menus (date, weekly_menu_id, lunch_entry_id, dinner_entry_id) VALUES
+('2025-06-02', 'week-2025-W23', 'menu-entry-2025-06-02-almoco', 'menu-entry-2025-06-02-jantar'),
+('2025-06-03', 'week-2025-W23', 'menu-entry-2025-06-03-almoco', 'menu-entry-2025-06-03-jantar'),
+('2025-06-04', 'week-2025-W23', 'menu-entry-2025-06-04-almoco', 'menu-entry-2025-06-04-jantar'),
+('2025-06-05', 'week-2025-W23', 'menu-entry-2025-06-05-almoco', 'menu-entry-2025-06-05-jantar'),
+('2025-06-06', 'week-2025-W23', 'menu-entry-2025-06-06-almoco', 'menu-entry-2025-06-06-jantar'),
+('2025-06-07', 'week-2025-W23', 'menu-entry-2025-06-07-almoco', 'menu-entry-2025-06-07-jantar'),
+('2025-06-08', 'week-2025-W23', 'menu-entry-2025-06-08-almoco', 'menu-entry-2025-06-08-jantar');
 
--- Inserção do menu diário
-INSERT INTO day_menus (date, weekly_menu_id, lunch_entry_id, dinner_entry_id) VALUES ('2025-06-03', 'week-2025-W23', NULL, NULL)
+-- Semana 24: 2025-06-09 a 2025-06-15
+INSERT INTO weekly_menus (week_id, start_date, end_date) VALUES 
+('week-2025-W24', '2025-06-09', '2025-06-15');
 
--- Inserção de entrada de almoço
-INSERT INTO menu_entries (id, `date`, meal_type, main_dish_id, alt_dish_id, dessert_id, sopa_id, notes) VALUES ('menu-entry-2025-06-03-almoco', '2025-06-03', 'almoco', 'dish-frango-legumes', 'dish-calamares-tomate', 'dish-fruta', 'dish-sopa-chuchu-feijao', 'Inclui opção vegan: Moqueca de tofu com arroz branco.')
+-- Dias da semana 24
+INSERT INTO menu_entries (id, date, meal_type, main_dish_id, alt_dish_id, dessert_id, sopa_id) VALUES
+('menu-entry-2025-06-09-almoco', '2025-06-09', 'almoco', 'dish-lasanha', 'dish-vegetariano', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-09-jantar', '2025-06-09', 'jantar', 'dish-bacalhau', 'dish-vegan', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-10-almoco', '2025-06-10', 'almoco', 'dish-vegan', 'dish-carne', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-10-jantar', '2025-06-10', 'jantar', 'dish-peixe', 'dish-vegetariano', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-11-almoco', '2025-06-11', 'almoco', 'dish-carne', 'dish-vegan', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-11-jantar', '2025-06-11', 'jantar', 'dish-lasanha', 'dish-vegetariano', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-12-almoco', '2025-06-12', 'almoco', 'dish-peixe', 'dish-vegan', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-12-jantar', '2025-06-12', 'jantar', 'dish-carne', 'dish-vegetariano', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-13-almoco', '2025-06-13', 'almoco', 'dish-vegetariano', 'dish-vegan', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-13-jantar', '2025-06-13', 'jantar', 'dish-lasanha', 'dish-carne', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-14-almoco', '2025-06-14', 'almoco', 'dish-peixe', 'dish-vegetariano', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-14-jantar', '2025-06-14', 'jantar', 'dish-vegan', 'dish-carne', 'dish-fruta', 'dish-sopa-peixe'),
+('menu-entry-2025-06-15-almoco', '2025-06-15', 'almoco', 'dish-lasanha', 'dish-vegan', 'dish-mousse', 'dish-sopa-legumes'),
+('menu-entry-2025-06-15-jantar', '2025-06-15', 'jantar', 'dish-peixe', 'dish-vegetariano', 'dish-fruta', 'dish-sopa-peixe');
 
--- Atualização do menu diário
-UPDATE day_menus SET lunch_entry_id = 'menu-entry-2025-06-03-almoco' WHERE date = '2025-06-03'
-
+INSERT INTO day_menus (date, weekly_menu_id, lunch_entry_id, dinner_entry_id) VALUES
+('2025-06-09', 'week-2025-W24', 'menu-entry-2025-06-09-almoco', 'menu-entry-2025-06-09-jantar'),
+('2025-06-10', 'week-2025-W24', 'menu-entry-2025-06-10-almoco', 'menu-entry-2025-06-10-jantar'),
+('2025-06-11', 'week-2025-W24', 'menu-entry-2025-06-11-almoco', 'menu-entry-2025-06-11-jantar'),
+('2025-06-12', 'week-2025-W24', 'menu-entry-2025-06-12-almoco', 'menu-entry-2025-06-12-jantar'),
+('2025-06-13', 'week-2025-W24', 'menu-entry-2025-06-13-almoco', 'menu-entry-2025-06-13-jantar'),
+('2025-06-14', 'week-2025-W24', 'menu-entry-2025-06-14-almoco', 'menu-entry-2025-06-14-jantar'),
+('2025-06-15', 'week-2025-W24', 'menu-entry-2025-06-15-almoco', 'menu-entry-2025-06-15-jantar');

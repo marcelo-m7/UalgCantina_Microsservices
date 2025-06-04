@@ -53,15 +53,15 @@ VALUES
    -------------------------------------------------------------------- */
 INSERT INTO weekly_menus (week_id, start_date, end_date)
 VALUES
-  ('week-2023-W40', '2023-10-02', '2023-10-08');
+  ('week-2025-W40', '2025-10-02', '2025-10-08');
 
 /* ----------------------------------------------------------------------
    6) Menus diários (ainda sem refeições atribuídas)
    -------------------------------------------------------------------- */
 INSERT INTO day_menus ( `date`, weekly_menu_id, lunch_entry_id, dinner_entry_id )
 VALUES
-  ('2023-10-02', 'week-2023-W40', NULL, NULL),
-  ('2023-10-03', 'week-2023-W40', NULL, NULL);
+  ('2025-06-02', 'week-2025-W40', NULL, NULL),
+  ('2025-06-03', 'week-2025-W40', NULL, NULL);
 
 /* ----------------------------------------------------------------------
    7) Entradas de menu (almoço/jantar)
@@ -69,16 +69,16 @@ VALUES
 INSERT INTO menu_entries
   (id, `date`, meal_type, main_dish_id, alt_dish_id, dessert_id, sopa_id, notes)
 VALUES
-  ('menu-entry-2023-10-02-almoco', '2023-10-02', 'almoco',
+  ('menu-entry-2025-06-02-almoco', '2025-06-02', 'almoco',
    'dish-lasanha-carne', 'dish-legumes-salteados',
    'dish-mousse-chocolate', 'dish-sopa-legumes',
    'Prato do dia: Lasanha à Bolonhesa'),
 
-  ('menu-entry-2023-10-02-jantar', '2023-10-02', 'jantar',
+  ('menu-entry-2025-06-02-jantar', '2025-06-02', 'jantar',
    'dish-bacalhau-natas', 'dish-curry-grao',
    'dish-fruta-epoca', 'dish-sopa-peixe', NULL),
 
-  ('menu-entry-2023-10-03-almoco', '2023-10-03', 'almoco',
+  ('menu-entry-2025-06-03-almoco', '2025-06-03', 'almoco',
    'dish-curry-grao', 'dish-bacalhau-natas',
    'dish-fruta-epoca', 'dish-sopa-legumes',
    'Opção vegan: Caril de Grão');
@@ -88,14 +88,14 @@ VALUES
    -------------------------------------------------------------------- */
 UPDATE day_menus
 SET
-  lunch_entry_id  = 'menu-entry-2023-10-02-almoco',
-  dinner_entry_id = 'menu-entry-2023-10-02-jantar'
-WHERE `date` = '2023-10-02';
+  lunch_entry_id  = 'menu-entry-2025-06-02-almoco',
+  dinner_entry_id = 'menu-entry-2025-06-02-jantar'
+WHERE `date` = '2025-06-02';
 
 UPDATE day_menus
 SET
-  lunch_entry_id = 'menu-entry-2023-10-03-almoco'
-WHERE `date` = '2023-10-03';
+  lunch_entry_id = 'menu-entry-2025-06-03-almoco'
+WHERE `date` = '2025-06-03';
 
 /* ----------------------------------------------------------------------
    9) Reactiva verificações de FK
