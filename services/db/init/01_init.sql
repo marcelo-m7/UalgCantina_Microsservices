@@ -1,4 +1,4 @@
--- services/db/init/00_init.sql
+-- services/db/init/01_init.sql
 
 -- 1) Cria o banco de dados (caso não exista) e seleciona ele
 CREATE DATABASE IF NOT EXISTS cantina_db;

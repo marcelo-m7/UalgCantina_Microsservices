@@ -1,8 +1,11 @@
-# project/db/Dockerfile
+# Use a imagem oficial do MySQL como base
 FROM mysql:8.0
 
-# Copiar scripts de inicialização para a imagem
-# O MySQL executa automaticamente qualquer .sql ou .sh em /docker-entrypoint-initdb.d
-COPY init /docker-entrypoint-initdb.d
+# Copie o arquivo customizado de configuração do MySQL (opcional)
+COPY my.cnf /etc/mysql/conf.d/my.cnf
 
-# (Nenhum CMD específico é necessário, a imagem oficial já define o entrypoint)
+# Copie scripts SQL adicionais ou scripts shell, se necessário
+# COPY scripts/ /docker-entrypoint-initdb.d/
+
+# (Opcional) Instale dependências extra
+# RUN apt-get update && apt-get install -y less vim

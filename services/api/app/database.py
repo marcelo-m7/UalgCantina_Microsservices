@@ -7,7 +7,7 @@ from config import settings
 
 # Cria a engine do SQLAlchemy usando a URL do config
 engine = create_engine(
-    settings.db_url(),
+    settings.db_url,
     echo=False,
     future=True
 )

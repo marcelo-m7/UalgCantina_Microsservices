@@ -5,22 +5,22 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { useAuth } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
-  Salad, // Using Salad for Dishes as per common food app iconography
+  Salad,
   CalendarDays,
-  ListFilter, // For Allergens
-  Sparkles, // For AI Suggestions
+  ListFilter,
+  Sparkles,
   LogOut,
   Menu as MenuIcon,
   UserCircle,
   Settings
 } from 'lucide-react';
 import { CantinaCastLogo } from '@/components/icons';
-import Image from 'next/image'; // For user avatar
+import Image from 'next/image';
 
 const navItems = [
   { href: '/admin', label: 'Visão Geral', icon: LayoutDashboard },
@@ -108,7 +108,6 @@ export function AdminSidebar() {
       <aside className="hidden md:flex md:flex-col w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border fixed top-0 left-0 h-full z-30">
         {navigationContent}
       </aside>
-
       {/* Mobile Sidebar Trigger (placed in AdminLayout Header) */}
     </>
   );
@@ -124,6 +123,8 @@ export function MobileSheet({ children }: { children: React.ReactNode }) {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="p-0 w-72 bg-sidebar text-sidebar-foreground border-r-0 flex flex-col">
+        {/* Título só para acessibilidade (screen readers), não aparece visualmente */}
+        <SheetTitle className="sr-only">Menu de navegação</SheetTitle>
         {children}
       </SheetContent>
     </Sheet>

@@ -41,6 +41,11 @@ backend/
 * Conta e projeto Firebase configurado (apenas para geração de ID tokens no frontend)
 * Git (para clonar o repositório)
 
+## Rodar em Developing
+
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
 ## Configuração e Instalação
 
 1. **Clone o repositório:**
