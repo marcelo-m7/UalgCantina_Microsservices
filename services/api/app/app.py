@@ -36,7 +36,7 @@ def get_public_weekly_menu(db: Session = Depends(get_db)):
         .first()
     )
     if not weekly:
-        return None
+        raise HTTPException(status_code=404, detail="WeeklyMenu não encontrado")
     return weekly       # agora contém days=[]
 
 

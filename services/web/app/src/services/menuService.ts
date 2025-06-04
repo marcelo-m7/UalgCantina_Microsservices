@@ -1,5 +1,6 @@
 // src/services/menuService.ts
 import apiClient from '@/lib/api-client';
+import axios from 'axios';
 import type { WeeklyMenu, MenuEntry, DayMenu } from '@/lib/types';
 
 // Assuming API returns a structure similar to WeeklyMenu
@@ -7,10 +8,17 @@ import type { WeeklyMenu, MenuEntry, DayMenu } from '@/lib/types';
 // The admin endpoint for menus would be different, e.g., '/menus/weekly'
 
 // ✅ Buscar o menu “público” que já vem como objeto único
-export const getPublicWeeklyMenu = async (): Promise<WeeklyMenu> => {
-  const { data } = await apiClient.get('/public/weekly/');
-  // garante que sempre exista o array days, nem que vazio
-  return { ...data, days: data.days ?? [] };
+export const getPublicWeeklyMenu = async (): Promise<WeeklyMenu | null> => {
+  try {
+    const { data } = await apiClient.get('/public/weekly/');
+    // garante que sempre exista o array days, nem que vazio
+    return { ...data, days: data.days ?? [] };
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.status === 404) {
+      return null;
+    }
+    throw err;
+  }
 };
 
 /* — se quiser o endpoint de gestão —
