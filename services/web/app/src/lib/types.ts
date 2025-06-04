@@ -27,6 +27,8 @@ export interface Dish {
   kcals?: number | null;
   allergenIds?: string[];
   allergens?: Allergen[];
+  /** Optional icon to visually represent the dish */
+  icon?: LucideIcon;
 }
 
 export interface MenuEntry {
@@ -50,12 +52,12 @@ export interface MenuEntry {
 }
 
 export interface DayMenu {
-  date: string; // YYYY-MM-DD
-  weeklyMenuId: string;
-  lunchEntryId?: string | null;
-  dinnerEntryId?: string | null;
-  lunchEntry?: MenuEntry | null;
-  dinnerEntry?: MenuEntry | null;
+  /** ISO date string identifying the day */
+  date: string;
+  /** Lunch menu for the day */
+  lunch?: MenuEntry;
+  /** Dinner menu for the day */
+  dinner?: MenuEntry;
 }
 
 export interface WeeklyMenu {

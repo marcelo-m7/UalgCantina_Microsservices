@@ -139,7 +139,7 @@ const handleEditMeal = (date: string, mealType: "lunch" | "dinner") => {
 
 const day = weeklyMenu?.days.find((d) => d.date === date);
 const meal: MenuEntry | undefined =
-  mealType === "lunch" ? day?.lunchEntry ?? undefined : day?.dinnerEntry ?? undefined;
+  mealType === "lunch" ? day?.lunch ?? undefined : day?.dinner ?? undefined;
 
 
   const baseForm: MenuDayEditFormData = {
@@ -189,7 +189,8 @@ const meal: MenuEntry | undefined =
 
     const payload: MenuEntryUpdatePayload = {
       date: currentEditForm.date,
-      mealType: currentEditForm.mealType,
+      mealType:
+        currentEditForm.mealType === "lunch" ? "almoco" : "jantar",
       sopaId: currentEditForm.sopaId ?? null,
       mainDishId: currentEditForm.mainDishId,
       altDishId: currentEditForm.altDishId ?? null,
@@ -321,7 +322,7 @@ const meal: MenuEntry | undefined =
               </CardHeader>
               <CardContent className="space-y-4">
                 {(["lunch", "dinner"] as const).map((mealType) => {
-const meal = mealType === "lunch" ? day.lunchEntry : day.dinnerEntry;
+const meal = mealType === "lunch" ? day.lunch : day.dinner;
 
                   return (
                     <div

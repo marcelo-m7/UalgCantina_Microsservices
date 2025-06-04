@@ -39,7 +39,8 @@ export const getAdminWeeklyMenu = async (): Promise<WeeklyMenu> => {
 // The MenuEntry type might be simplified for the payload, e.g. sending only IDs
 export type MenuEntryUpdatePayload = {
   date: string; // YYYY-MM-DD
-  mealType: 'lunch' | 'dinner';
+  /** Meal type must follow API convention */
+  mealType: 'almoco' | 'jantar';
   sopaId?: string | null; // Use null to clear
   mainDishId: string;
   altDishId?: string | null; // Use null to clear
