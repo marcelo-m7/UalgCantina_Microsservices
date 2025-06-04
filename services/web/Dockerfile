@@ -19,5 +19,5 @@ COPY ./app /usr/src/app
 EXPOSE 3000
 
 # 7. Comando padrão para rodar o Next.js em modo de desenvolvimento
-# CMD ["npm", "run", "dev"]
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "start"]
