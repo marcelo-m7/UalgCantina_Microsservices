@@ -157,9 +157,14 @@ class DayMenuUpdate(CamelModel):
     dinner_entry_id: Optional[str] = None
 
 
-class DayMenuOut(DayMenuBase):
-    lunch_entry: Optional[MenuEntryOut] = None
-    dinner_entry: Optional[MenuEntryOut] = None
+class DayMenuOut(CamelModel):
+    date: date
+    lunch_entry: Optional[MenuEntryOut] = Field(
+        default=None, serialization_alias="lunch"
+    )
+    dinner_entry: Optional[MenuEntryOut] = Field(
+        default=None, serialization_alias="dinner"
+    )
 
 
 # ------------- WeeklyMenu -------------

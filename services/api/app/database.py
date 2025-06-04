@@ -21,3 +21,9 @@ SessionLocal = sessionmaker(
 
 # Base para declarar modelos
 Base = declarative_base()
+
+
+def init_db() -> None:
+    """Create database tables if they do not exist."""
+    print("[DEBUG] Initializing database and creating tables if needed...")
+    Base.metadata.create_all(bind=engine)

@@ -8,7 +8,7 @@ from datetime import date
 
 import config
 import crud, models, schemas
-from database import engine, Base
+from database import engine, Base, init_db
 from deps import get_db, verify_token
 
 app = FastAPI(
@@ -16,6 +16,9 @@ app = FastAPI(
     version="1.0.0",
     description="API para gerenciamento de menus e pratos da cantina"
 )
+
+# Inicializa BD
+init_db()
 
 # Adiciona CORS
 app.add_middleware(

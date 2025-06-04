@@ -16,6 +16,7 @@ def get_allergen(db: Session, allergen_id: str) -> models.Allergen | None:
 
 
 def create_allergen(db: Session, allergen_in: schemas.AllergenCreate) -> models.Allergen:
+    print(f"[DEBUG] Creating allergen {allergen_in.name} ({allergen_in.id})")
     db_obj = models.Allergen(
         id=allergen_in.id,
         name=allergen_in.name,
@@ -32,6 +33,7 @@ def update_allergen(db: Session, allergen_id: str, allergen_in: schemas.Allergen
     db_obj = get_allergen(db, allergen_id)
     if not db_obj:
         return None
+    print(f"[DEBUG] Updating allergen {allergen_id}")
     for field, value in allergen_in.dict(exclude_none=True).items():
         setattr(db_obj, field, value)
     db.commit()
@@ -42,6 +44,7 @@ def update_allergen(db: Session, allergen_id: str, allergen_in: schemas.Allergen
 def delete_allergen(db: Session, allergen_id: str) -> None:
     db_obj = get_allergen(db, allergen_id)
     if db_obj:
+        print(f"[DEBUG] Deleting allergen {allergen_id}")
         db.delete(db_obj)
         db.commit()
 
@@ -56,6 +59,7 @@ def get_dish(db: Session, dish_id: str) -> models.Dish | None:
 
 
 def create_dish(db: Session, dish_in: schemas.DishCreate) -> models.Dish:
+    print(f"[DEBUG] Creating dish {dish_in.name} ({dish_in.id})")
     db_obj = models.Dish(
         id=dish_in.id,
         name=dish_in.name,
@@ -77,6 +81,7 @@ def update_dish(db: Session, dish_id: str, dish_in: schemas.DishUpdate) -> model
     db_obj = get_dish(db, dish_id)
     if not db_obj:
         return None
+    print(f"[DEBUG] Updating dish {dish_id}")
     data = dish_in.dict(exclude_none=True)
     if "allergen_ids" in data:
         # Atualiza lista de alergênicos
@@ -93,6 +98,7 @@ def update_dish(db: Session, dish_id: str, dish_in: schemas.DishUpdate) -> model
 def delete_dish(db: Session, dish_id: str) -> None:
     db_obj = get_dish(db, dish_id)
     if db_obj:
+        print(f"[DEBUG] Deleting dish {dish_id}")
         db.delete(db_obj)
         db.commit()
 
@@ -107,6 +113,7 @@ def get_all_menu_entries(db: Session) -> list[models.MenuEntry]:
 
 
 def create_menu_entry(db: Session, entry_in: schemas.MenuEntryCreate) -> models.MenuEntry:
+    print(f"[DEBUG] Creating menu entry {entry_in.id} for {entry_in.date}")
     db_obj = models.MenuEntry(
         id=entry_in.id,
         date=entry_in.date,
@@ -127,6 +134,7 @@ def update_menu_entry(db: Session, entry_id: str, entry_in: schemas.MenuEntryUpd
     db_obj = get_menu_entry(db, entry_id)
     if not db_obj:
         return None
+    print(f"[DEBUG] Updating menu entry {entry_id}")
     for field, value in entry_in.dict(exclude_none=True).items():
         setattr(db_obj, field, value)
     db.commit()
@@ -137,6 +145,7 @@ def update_menu_entry(db: Session, entry_id: str, entry_in: schemas.MenuEntryUpd
 def delete_menu_entry(db: Session, entry_id: str) -> None:
     db_obj = get_menu_entry(db, entry_id)
     if db_obj:
+        print(f"[DEBUG] Deleting menu entry {entry_id}")
         db.delete(db_obj)
         db.commit()
 
@@ -156,6 +165,7 @@ def get_all_weekly_menus(db: Session) -> list[models.WeeklyMenu]:
 
 
 def create_weekly_menu(db: Session, menu_in: schemas.WeeklyMenuCreate) -> models.WeeklyMenu:
+    print(f"[DEBUG] Creating weekly menu {menu_in.week_id}")
     db_obj = models.WeeklyMenu(
         week_id=menu_in.week_id,
         start_date=menu_in.start_date,
@@ -171,6 +181,7 @@ def update_weekly_menu(db: Session, week_id: str, menu_in: schemas.WeeklyMenuUpd
     db_obj = get_weekly_menu(db, week_id)
     if not db_obj:
         return None
+    print(f"[DEBUG] Updating weekly menu {week_id}")
     for field, value in menu_in.dict(exclude_none=True).items():
         setattr(db_obj, field, value)
     db.commit()
@@ -181,6 +192,7 @@ def update_weekly_menu(db: Session, week_id: str, menu_in: schemas.WeeklyMenuUpd
 def delete_weekly_menu(db: Session, week_id: str) -> None:
     db_obj = get_weekly_menu(db, week_id)
     if db_obj:
+        print(f"[DEBUG] Deleting weekly menu {week_id}")
         db.delete(db_obj)
         db.commit()
 
@@ -195,6 +207,7 @@ def get_all_day_menus(db: Session) -> list[models.DayMenu]:
 
 
 def create_day_menu(db: Session, day_in: schemas.DayMenuCreate) -> models.DayMenu:
+    print(f"[DEBUG] Creating day menu for {day_in.date}")
     db_obj = models.DayMenu(
         date=day_in.date,
         weekly_menu_id=day_in.weekly_menu_id,
@@ -211,6 +224,7 @@ def update_day_menu(db: Session, date: date, day_in: schemas.DayMenuUpdate) -> m
     db_obj = get_day_menu(db, date)
     if not db_obj:
         return None
+    print(f"[DEBUG] Updating day menu for {date}")
     for field, value in day_in.dict(exclude_none=True).items():
         setattr(db_obj, field, value)
     db.commit()
@@ -221,5 +235,6 @@ def update_day_menu(db: Session, date: date, day_in: schemas.DayMenuUpdate) -> m
 def delete_day_menu(db: Session, date: date) -> None:
     db_obj = get_day_menu(db, date)
     if db_obj:
+        print(f"[DEBUG] Deleting day menu for {date}")
         db.delete(db_obj)
         db.commit()
