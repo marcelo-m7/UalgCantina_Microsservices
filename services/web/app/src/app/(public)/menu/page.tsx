@@ -199,9 +199,8 @@ const filteredMenu = useMemo(() => {
     ...weeklyMenu,
     days: weeklyMenu.days.map((day) => ({
       ...day,
-      // 🔄 renomeamos aqui
-      lunch:  filterMenuEntry(day.lunchEntry),
-      dinner: filterMenuEntry(day.dinnerEntry),
+      lunch:  filterMenuEntry(day.lunch),
+      dinner: filterMenuEntry(day.dinner),
     })),
   };
 }, [weeklyMenu, selectedAllergens]);

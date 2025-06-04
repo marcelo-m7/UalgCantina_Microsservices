@@ -26,7 +26,15 @@ import { getAllergens } from '@/services/allergenService';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const dishTypes: Array<Dish['type']> = ['carne', 'peixe', 'vegetariano', 'vegan', 'sobremesa', 'sopa', 'bebida'];
+const dishTypes = [
+  'carne',
+  'peixe',
+  'vegetariano',
+  'vegan',
+  'sobremesa',
+  'sopa',
+  'bebida',
+] as const;
 
 // Schema for form data, ensures price and kcals are numbers
 const dishFormSchema = z.object({
@@ -278,7 +286,12 @@ export default function DishesPage() {
                       <div className="flex flex-wrap gap-1">
                         {dishAllergensToDisplay.slice(0,3).map(allergen => {
                            const AllergenSpecificIcon = getAllergenIcon(allergen.icon || allergen.name);
-                           return <AllergenSpecificIcon key={allergen.id} className="h-4 w-4" title={allergen.name} />;
+                           return (
+                             <AllergenSpecificIcon
+                               key={allergen.id}
+                               className="h-4 w-4"
+                             />
+                           );
                         })}
                         {dishAllergensToDisplay.length > 3 && <span className="text-xs">+{dishAllergensToDisplay.length-3}</span>}
                         {dishAllergensToDisplay.length === 0 && <span className="text-xs text-muted-foreground">N/A</span>}
