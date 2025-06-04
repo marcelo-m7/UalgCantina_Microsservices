@@ -148,7 +148,7 @@ function MealCard({ meal, mealType, allAllergens }: { meal?: MenuEntry; mealType
 export default function PublicMenuPage() {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
 
-  const { data: weeklyMenu, isLoading: isLoadingMenu, isError: isErrorMenu, error: menuError } = useQuery<WeeklyMenu, Error>({
+  const { data: weeklyMenu, isLoading: isLoadingMenu, isError: isErrorMenu, error: menuError } = useQuery<WeeklyMenu | null, Error>({
     queryKey: ['publicWeeklyMenu'],
     queryFn: getPublicWeeklyMenu,
   });
