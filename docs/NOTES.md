@@ -38,7 +38,7 @@ Este relatório descreve os objetivos, arquitetura, componentes, fluxos de dados
    │  ↕ API REST
    ▼
 [ Backend (FastAPI) ]
-   │  ↕ SQLAlchemy/Alembic
+   │  ↕ SQLAlchemy (sem Alembic)
    ▼
 [ Banco de Dados (MySQL + phpMyAdmin) ]
 ```
@@ -56,7 +56,7 @@ Este relatório descreve os objetivos, arquitetura, componentes, fluxos de dados
 
 * **Python 3.12** + **FastAPI**
 * **firebase-admin** para verificação do ID Token
-* **SQLAlchemy ORM** + **Alembic** para migrações
+* **SQLAlchemy ORM** (sem Alembic no momento)
 * **Pytest + HTTPX** para testes automatizados
 * **Views e Stored Procedures** (MySQL) para operações CRUD e consultas otimizadas
 * **Docker Compose** para orquestração (api, db, phpmyadmin)
@@ -93,7 +93,7 @@ Este relatório descreve os objetivos, arquitetura, componentes, fluxos de dados
   * Pydantic schemas para request/response
   * SQLAlchemy models com relacionamentos
 * **Middleware**: autenticação e autorização por e-mail
-* **Scripts de migração**: Alembic env + versões
+* **Scripts de migração**: não utilizados por enquanto (estruturas são criadas via SQL)
 * **Arquivos**: main.py, core/, db/, models/, schemas/, services/, routers/
 
 ### 4.3. Banco de Dados
@@ -126,7 +126,7 @@ Este relatório descreve os objetivos, arquitetura, componentes, fluxos de dados
   * GitHub Actions: lint, typecheck, tests, build, push
 * **Back-end**:
 
-  * Virtualenv, flake8, pytest, alembic migrations, build image
+  * Virtualenv, flake8, pytest, build image
   * GitHub Actions pipeline similar
 * **Infra**: Docker Compose local / Kubernetes (futuro)
 

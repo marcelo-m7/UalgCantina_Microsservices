@@ -18,7 +18,7 @@ O CantinaCast adota uma arquitetura de microsserviços (ou, neste caso, serviço
 
 *   **Frontend**: Desenvolvido com **Next.js (React)** para uma interface de utilizador rápida e dinâmica.
 *   **Backend**: Construído com **FastAPI (Python)**, fornecendo uma API robusta e performática para gerenciar os dados.
-*   **Banco de Dados**: Utiliza **PostgreSQL** para armazenamento seguro e eficiente dos dados.
+*   **Banco de Dados**: Utiliza **MySQL** para armazenamento seguro e eficiente dos dados.
 *   **Containerização**: Todos os serviços são empacotados e orquestrados usando **Docker** e **Docker Compose**, garantindo ambientes de desenvolvimento e produção consistentes.
 *   **Autenticação**: Integração com **Firebase Authentication** para gestão de utilizadores (administradores).
 *   **AI (Futuro)**: Utilização de **Vertex AI Genkit** para funcionalidades de IA.
@@ -65,17 +65,21 @@ cantinacast/
 │       ├── allergens.py
 │       ├── dishes.py
 │       └── menus.py
-├── db/                # Banco de dados PostgreSQL
-│   ├── Dockerfile
-│   └── init/
-│       └── 01_init.sql   # Script de inicialização opcional
+├── services/
+│   ├── db/            # Banco de dados MySQL
+│   │   ├── Dockerfile
+│   │   └── init/
+│   │       ├── 00_init.sql
+│   │       ├── 01_tables.sql
+│   │       ├── 02_seeds.sql
+│   │       └── 03_simple_data.sql
 ├── .env               # Variáveis de ambiente (NÃO commitar valores sensíveis!)
 ├── .env.example       # Exemplo de variáveis de ambiente (para commit)
 └── docker-compose.yml # Orquestração dos containers
 ```
 *   **web/Dockerfile**: Define a imagem Docker para a aplicação Next.js.
 *   **api/Dockerfile**: Define a imagem Docker para o backend FastAPI.
-*   **db/Dockerfile**: Define a imagem Docker para o banco de dados PostgreSQL (baseado na imagem oficial).
+*   **db/Dockerfile**: Define a imagem Docker para o banco de dados MySQL (baseado na imagem oficial).
 *   **.env**: Contém as variáveis de ambiente reais (credenciais do DB, URL da API, etc.). **Mantenha este arquivo fora do controle de versão em repositórios públicos.**
 *   **.env.example**: Um arquivo de exemplo para as variáveis de ambiente, com placeholders para valores sensíveis.
 *   **docker-compose.yml**: Orquestra os três serviços (`web`, `api`, `db`), definindo suas dependências, portas e volumes.
@@ -94,8 +98,8 @@ Para configurar a estrutura básica do projeto, a AI realizou os seguintes passo
 8.  Criou o arquivo `api/routers/dishes.py` com um router FastAPI para os endpoints de pratos.
 9.  Criou o arquivo `api/routers/menus.py` com um router FastAPI para os endpoints de ementas.
 10. Atualizou o arquivo `api/main.py` para importar e incluir os routers criados.
-11. Criou a estrutura de pastas `db/init`.
-12. Criou o arquivo `db/init/01_init.sql` (vazio, para scripts de inicialização opcionais do banco).
+11. Criou a estrutura de pastas `services/db/init`.
+12. Adicionou scripts SQL em `services/db/init` para criar esquemas e dados iniciais (`00_init.sql`, `01_tables.sql`, `02_seeds.sql`, `03_simple_data.sql`).
 13. Criou o Dockerfile para o frontend em `web/Dockerfile`.
 14. Criou o Dockerfile para o backend em `api/Dockerfile`.
 15. Criou o Dockerfile para o banco de dados em `db/Dockerfile`.
@@ -109,7 +113,7 @@ Esta estrutura fornece uma base sólida para começar a implementar a lógica de
 
 Certifique-se de ter o Docker e o Docker Compose instalados.
 
-1.  **Configurar Variáveis de Ambiente:** Copie o arquivo `.env.example` para `.env` na raiz do projeto e preencha com as credenciais e configurações apropriadas (especialmente as credenciais do PostgreSQL).
+1.  **Configurar Variáveis de Ambiente:** Copie o arquivo `.env.example` para `.env` na raiz do projeto e preencha com as credenciais e configurações apropriadas (especialmente as credenciais do MySQL).
 ```
 bash
     cp .env.example .env
@@ -122,7 +126,7 @@ bash
     docker-compose up --build
     
 ```
-Este comando irá construir as imagens Docker para cada serviço (frontend, backend, database) e iniciar os contêineres. Na primeira execução, o backend usará o SQLAlchemy para criar as tabelas no banco de dados.
+Este comando irá construir as imagens Docker para cada serviço (frontend, backend, database) e iniciar os contêineres.
 
 3.  **Verificar os Logs:** Acompanhe os logs no terminal para garantir que todos os serviços iniciaram sem erros.
 
@@ -130,6 +134,6 @@ Este comando irá construir as imagens Docker para cada serviço (frontend, back
 
     *   **Frontend:** Abra o navegador em `http://localhost:3000`. Você deverá ver a interface do utilizador (se o frontend já tiver sido implementado).
     *   **API Docs (Swagger UI):** A documentação interativa da API FastAPI está disponível em `http://localhost:8000/docs`. Você pode explorar os endpoints e testá-los diretamente no navegador.
-    *   **Banco de Dados:** O banco de dados PostgreSQL estará rodando e acessível internamente pelos contêineres via hostname `db` na porta 5432. Externamente (se desejar conectar com um cliente SQL), pode usar `localhost:5432` com as credenciais definidas no `.env`.
+    *   **Banco de Dados:** O banco de dados MySQL estará rodando e acessível internamente pelos contêineres via hostname `db` na porta 3306. Externamente (se desejar conectar com um cliente SQL), pode usar `localhost:3306` com as credenciais definidas no `.env`.
 
 Para parar os serviços, pressione `Ctrl+C` no terminal onde o `docker-compose up` está a correr. Para remover os contêineres e redes (mas mantendo os dados do banco), use `docker-compose down`. Para remover contêineres, redes e os dados do banco (volume), use `docker-compose down -v` (use com cuidado!).
