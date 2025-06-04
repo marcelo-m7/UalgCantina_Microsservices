@@ -38,5 +38,4 @@ O repositório inclui os arquivos `docker-compose.yml`, Dockerfiles para cada se
 
 ## Considerações Finais
 
-O CantinaCast cumpre os requisitos principais do trabalho prático, permitindo gerir de forma centralizada a ementa da cantina. A solução é escalável graças à utilização de microsserviços Dockerizados e pode ser estendida com testes automatizados, CI/CD e funcionalidades de IA.
-
+Enfrentei dificuldades ao compilar o frontend para execução fora do modo de desenvolvimento. Por esse motivo, no arquivo `services/web/Dockerfile`, a linha `# CMD ["npm", "run", "start"]` está comentada, e o script em execução é o `dev`, que compila as páginas dinamicamente no momento do acesso. Isso pode tornar a navegação um pouco mais lenta nas primeiras visitas. No entanto, o professor pode testar a substituição do script por `start`, o que fará com que o servidor Next.js compile todo o frontend antecipadamente, antes de disponibilizar o acesso à aplicação.
