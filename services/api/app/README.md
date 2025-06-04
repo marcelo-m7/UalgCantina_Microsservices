@@ -48,39 +48,13 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 ```
 ## Configuração e Instalação
 
-1. **Clone o repositório:**
-
-   ```bash
-   git clone <repository_url>
-   cd <project_directory>/backend
-   ```
-
-2. **Crie um ambiente virtual (recomendado):**
-
-   ```bash
-   python -m venv venv
-   ```
-
-3. **Ative o ambiente virtual:**
-
-   * No Windows:
-
-     ```bash
-     venv\Scripts\activate
-     ```
-   * No macOS/Linux:
-
-     ```bash
-     source venv/bin/activate
-     ```
-
-4. **Instale as dependências:**
+1. **Instale as dependências:**
 
    ```bash
    pip install -r requirements.txt
    ```
 
-5. **Configure as variáveis de ambiente:**
+2. **Configure as variáveis de ambiente:**
 
    * Copie o exemplo de arquivo `.env.example` para `.env`:
 
