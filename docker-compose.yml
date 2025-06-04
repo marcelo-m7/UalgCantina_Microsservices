@@ -1,37 +1,53 @@
+###############################################################################
+#  DOCKER-COMPOSE — micro-serviços “Cantina”                                 #
+#  • Serviço MySQL agora É CONSTRUÍDO a partir de ./services/db/Dockerfile   #
+#  • Ficheiros SQL  ➜  services/db/app/init/                                 #
+#  • my.cnf         ➜  services/db/app/my.cnf                                  #
+###############################################################################
+
 services:
+# ────────────────────────────────  DATABASE  ──────────────────────────────── #
   db:
-    image: mysql:8.0
+    build:
+      context: ./services/db          #  ↳  contém o Dockerfile
+      dockerfile: Dockerfile
     container_name: app_db
-    env_file:
-      - .env
+
+    env_file: .env
     environment:
-      MYSQL_DATABASE: ${MYSQL_DB}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE:       ${MYSQL_DB}
+      MYSQL_USER:           ${MYSQL_USER}
+      MYSQL_PASSWORD:       ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD:  ${MYSQL_PASSWORD}
+
+    # Persistência apenas dos dados (o init e o my.cnf são copiados na imagem)
     volumes:
       - db_data:/var/lib/mysql
-      - ./services/db/init:/docker-entrypoint-initdb.d
-      - ./services/db/my.cnf:/etc/mysql/conf.d/my.cnf
 
+    # Espera o servidor ficar mesmo operacional
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "--silent", "-u", "root", "-p${MYSQL_PASSWORD}"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
+      test: >
+        mysqladmin ping -h127.0.0.1 -P3306
+        -uroot -p${MYSQL_PASSWORD} --silent
+      start_period: 25s
+      interval:     10s
+      timeout:      5s
+      retries:      5
 
+# ────────────────────────────────  PHPMYADMIN  ───────────────────────────── #
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: app_phpmyadmin
     ports:
       - "8081:80"
-    env_file:
-      - .env
+    env_file: .env
     environment:
       PMA_HOST: db
     depends_on:
-      - db
+      db:
+        condition: service_healthy        # só arranca quando MySQL estiver OK
 
+# ────────────────────────────────────  API  ───────────────────────────────── #
   api:
     build:
       context: ./services/api
@@ -39,12 +55,12 @@ services:
     container_name: app_api
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+    env_file: .env
     depends_on:
       db:
         condition: service_healthy
 
+# ────────────────────────────────────  WEB  ──────────────────────────────── #
   web:
     build:
       context: ./services/web
@@ -52,10 +68,10 @@ services:
     container_name: app_web
     ports:
       - "3000:3000"
-    env_file:
-      - .env
+    env_file: .env
     depends_on:
-      - api
+      - api                               # arranca depois da API
 
+# ─────────────────────────────────  VOLUMES  ─────────────────────────────── #
 volumes:
   db_data:

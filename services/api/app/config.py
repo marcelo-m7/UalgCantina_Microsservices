@@ -26,7 +26,7 @@ class Settings(BaseSettings):
         """Build the SQLAlchemy database URL from settings."""
         return (
             f"mysql+pymysql://{self.MYSQL_USER}:{self.MYSQL_PASSWORD}"
-            f"@{'db'}:{self.MYSQL_PORT}/{self.MYSQL_DB}"  # ?charset=utf8mb4"
+            f"@{'db'}:{self.MYSQL_PORT}/{self.MYSQL_DB}?charset=utf8mb4"
         )
 
     @property

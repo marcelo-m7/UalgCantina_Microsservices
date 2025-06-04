@@ -17,25 +17,6 @@ build/
 coverage/
 .genkit/
 
-# Local env and secrets
-.env
-.env.*
-.next-env.d.ts
-*.tsbuildinfo
-
-# Firebase
-firebase-debug.log
-firestore-debug.log
-
-# Misc files
-.DS_Store
-*.pem
-
-# OS
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
 # Vercel & deployment
 .vercel
 
