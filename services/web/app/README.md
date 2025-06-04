@@ -31,7 +31,7 @@ O CantinaCast é um sistema integrado projetado para gerir e apresentar as ement
 *   **Backend Esperado**:
     *   Framework: FastAPI (Python)
     *   Autenticação (Backend): Verificação de Firebase ID Token com `firebase-admin`.
-    *   Base de Dados Esperada: Postegres
+    *   Base de Dados Esperada: MySQL
 
 ## 3. Estrutura do Projeto Frontend (`src/`)
 
