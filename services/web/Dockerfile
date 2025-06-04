@@ -12,8 +12,6 @@ COPY ./app/package*.json ./
 # 4. Instala dependências do Next.js
 RUN npm install
 
-RUN npm run build
-
 # 5. Copia todo o restante do código do Next.js
 COPY ./app /usr/src/app
 
