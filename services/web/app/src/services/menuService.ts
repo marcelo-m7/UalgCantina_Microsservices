@@ -13,7 +13,7 @@ export const getPublicWeeklyMenu = async (): Promise<WeeklyMenu | null> => {
     const { data } = await apiClient.get('/public/weekly/');
     // garante que sempre exista o array days, nem que vazio
     return { ...data, days: data.days ?? [] };
-  } catch (err) {
+  } catch (err: unknown) {
     if (axios.isAxiosError(err) && err.response?.status === 404) {
       return null;
     }

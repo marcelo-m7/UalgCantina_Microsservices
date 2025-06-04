@@ -14,34 +14,34 @@ export const mockAllergens: Allergen[] = [
 
 export const mockDishes: Dish[] = [
   // Sopas
-  { id: 's1', name: 'Sopa de Legumes', type: 'sopa', price: 1.50, kcals: 120, allergenIds: [], icon: Soup },
-  { id: 's2', name: 'Creme de Cenoura', type: 'sopa', price: 1.50, kcals: 150, allergenIds: ['2'], icon: Soup }, // Lactose
+  { id: 's1', name: 'Sopa de Legumes', type: 'sopa', price: 1.50, kcals: 120, allergenIds: [] },
+  { id: 's2', name: 'Creme de Cenoura', type: 'sopa', price: 1.50, kcals: 150, allergenIds: ['2'] }, // Lactose
 
   // Pratos de Carne
-  { id: 'c1', name: 'Bife com Batatas Fritas', type: 'carne', price: 7.50, kcals: 600, allergenIds: [], icon: Beef },
-  { id: 'c2', name: 'Frango Assado com Arroz', type: 'carne', price: 6.80, kcals: 550, allergenIds: [], icon: Beef },
-  { id: 'c3', name: 'Lasanha à Bolonhesa', type: 'carne', price: 7.20, kcals: 650, allergenIds: ['1', '2'], icon: Beef }, // Glúten, Lactose
+  { id: 'c1', name: 'Bife com Batatas Fritas', type: 'carne', price: 7.50, kcals: 600, allergenIds: [] },
+  { id: 'c2', name: 'Frango Assado com Arroz', type: 'carne', price: 6.80, kcals: 550, allergenIds: [] },
+  { id: 'c3', name: 'Lasanha à Bolonhesa', type: 'carne', price: 7.20, kcals: 650, allergenIds: ['1', '2'] }, // Glúten, Lactose
 
   // Pratos de Peixe
-  { id: 'p1', name: 'Salmão Grelhado com Legumes', type: 'peixe', price: 8.50, kcals: 500, allergenIds: ['7'], icon: Fish },
-  { id: 'p2', name: 'Bacalhau com Natas', type: 'peixe', price: 9.00, kcals: 700, allergenIds: ['1', '2', '7'], icon: Fish }, // Glúten, Lactose, Peixe
+  { id: 'p1', name: 'Salmão Grelhado com Legumes', type: 'peixe', price: 8.50, kcals: 500, allergenIds: ['7'] },
+  { id: 'p2', name: 'Bacalhau com Natas', type: 'peixe', price: 9.00, kcals: 700, allergenIds: ['1', '2', '7'] }, // Glúten, Lactose, Peixe
 
   // Pratos Vegetarianos
-  { id: 'v1', name: 'Caril de Vegetais com Arroz Basmati', type: 'vegetariano', price: 6.50, kcals: 450, allergenIds: [], icon: Carrot },
-  { id: 'v2', name: 'Quiche de Espinafres e Ricota', type: 'vegetariano', price: 6.00, kcals: 400, allergenIds: ['1', '2', '3'], icon: Carrot }, // Glúten, Lactose, Ovos
+  { id: 'v1', name: 'Caril de Vegetais com Arroz Basmati', type: 'vegetariano', price: 6.50, kcals: 450, allergenIds: [] },
+  { id: 'v2', name: 'Quiche de Espinafres e Ricota', type: 'vegetariano', price: 6.00, kcals: 400, allergenIds: ['1', '2', '3'] }, // Glúten, Lactose, Ovos
 
   // Pratos Vegan
-  { id: 'vg1', name: 'Hambúrguer de Grão de Bico com Batata Doce', type: 'vegan', price: 7.00, kcals: 500, allergenIds: ['1'], icon: Vegan }, // Glúten (pão)
-  { id: 'vg2', name: 'Feijoada Vegan', type: 'vegan', price: 6.80, kcals: 480, allergenIds: [], icon: Vegan },
+  { id: 'vg1', name: 'Hambúrguer de Grão de Bico com Batata Doce', type: 'vegan', price: 7.00, kcals: 500, allergenIds: ['1'] }, // Glúten (pão)
+  { id: 'vg2', name: 'Feijoada Vegan', type: 'vegan', price: 6.80, kcals: 480, allergenIds: [] },
   
   // Sobremesas
-  { id: 'd1', name: 'Mousse de Chocolate', type: 'sobremesa', price: 2.50, kcals: 300, allergenIds: ['2', '3'], icon: Cake }, // Lactose, Ovos
-  { id: 'd2', name: 'Salada de Frutas', type: 'sobremesa', price: 2.00, kcals: 150, allergenIds: [], icon: Cake },
-  { id: 'd3', name: 'Arroz Doce', type: 'sobremesa', price: 2.20, kcals: 250, allergenIds: ['2'], icon: Cake }, // Lactose
+  { id: 'd1', name: 'Mousse de Chocolate', type: 'sobremesa', price: 2.50, kcals: 300, allergenIds: ['2', '3'] }, // Lactose, Ovos
+  { id: 'd2', name: 'Salada de Frutas', type: 'sobremesa', price: 2.00, kcals: 150, allergenIds: [] },
+  { id: 'd3', name: 'Arroz Doce', type: 'sobremesa', price: 2.20, kcals: 250, allergenIds: ['2'] }, // Lactose
 
   // Bebidas
-  { id: 'b1', name: 'Água Mineral 50cl', type: 'bebida', price: 1.00, kcals: 0, icon: GlassWater },
-  { id: 'b2', name: 'Sumo de Laranja Natural', type: 'bebida', price: 2.00, kcals: 110, icon: GlassWater },
+  { id: 'b1', name: 'Água Mineral 50cl', type: 'bebida', price: 1.00, kcals: 0 },
+  { id: 'b2', name: 'Sumo de Laranja Natural', type: 'bebida', price: 2.00, kcals: 110 },
 ];
 
 // Helper to populate dish details
