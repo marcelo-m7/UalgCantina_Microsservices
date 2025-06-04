@@ -31,8 +31,9 @@ export const listWeeklyMenus = async (): Promise<WeeklyMenu[]> => {
 
 // Example for admin-specific fetching if needed, may require authentication
 export const getAdminWeeklyMenu = async (): Promise<WeeklyMenu> => {
-  const response = await apiClient.get('/menus/weekly-admin/'); // Placeholder, adjust to actual admin endpoint
-  return response.data;
+  const { data } = await apiClient.get('/menus/weekly-admin/'); // Placeholder, adjust to actual admin endpoint
+  // Guarantee a valid array to avoid runtime errors when mapping over days
+  return { ...data, days: data.days ?? [] };
 };
 
 // Assuming an endpoint for updating a specific meal in a day menu
