@@ -8,14 +8,14 @@ SET FOREIGN_KEY_CHECKS = 0;
 /* ----------------------------------------------------------------------
    1) Utilizadores
    -------------------------------------------------------------------- */
-INSERT INTO users (name, email, role)
+INSERT IGNORE INTO users (name, email, role)
 VALUES
   ('Marcelo Santos', 'marcelosouzasantos77@gmail.com', 'admin');
 
 /* ----------------------------------------------------------------------
    2) Alergénicos
    -------------------------------------------------------------------- */
-INSERT INTO allergens (id, name, icon, description)
+INSERT IGNORE INTO allergens (id, name, icon, description)
 VALUES
   ('allergen-gluten',  'Glúten',          'Wheat',   'Presente em cereais como trigo, cevada e centeio.'),
   ('allergen-lactose', 'Lactose',         'Milk',    'Açúcar encontrado no leite e derivados.'),
@@ -26,7 +26,7 @@ VALUES
 /* ----------------------------------------------------------------------
    3) Pratos
    -------------------------------------------------------------------- */
-INSERT INTO dishes (id, name, `type`, description, price, kcals)
+INSERT IGNORE INTO dishes (id, name, `type`, description, price, kcals)
 VALUES
   ('dish-lasanha-carne',   'Lasanha à Bolonhesa',       'carne',       'Deliciosa lasanha com molho de carne e bechamel.', 6.50, 700),
   ('dish-bacalhau-natas',  'Bacalhau com Natas',        'peixe',       'Prato tradicional de bacalhau gratinado.',         7.00, 650),
@@ -42,7 +42,7 @@ VALUES
 /* ----------------------------------------------------------------------
    4) Relação pratos × alergénicos
    -------------------------------------------------------------------- */
-INSERT INTO dish_allergens (dish_id, allergen_id)
+INSERT IGNORE INTO dish_allergens (dish_id, allergen_id)
 VALUES
   ('dish-lasanha-carne',  'allergen-gluten'),
   ('dish-lasanha-carne',  'allergen-lactose'),
@@ -51,14 +51,14 @@ VALUES
 /* ----------------------------------------------------------------------
    5) Menus semanais
    -------------------------------------------------------------------- */
-INSERT INTO weekly_menus (week_id, start_date, end_date)
+INSERT IGNORE INTO weekly_menus (week_id, start_date, end_date)
 VALUES
   ('week-2025-W40', '2025-10-02', '2025-10-08');
 
 /* ----------------------------------------------------------------------
    6) Menus diários (ainda sem refeições atribuídas)
    -------------------------------------------------------------------- */
-INSERT INTO day_menus ( `date`, weekly_menu_id, lunch_entry_id, dinner_entry_id )
+INSERT IGNORE INTO day_menus ( `date`, weekly_menu_id, lunch_entry_id, dinner_entry_id )
 VALUES
   ('2025-06-02', 'week-2025-W40', NULL, NULL),
   ('2025-06-03', 'week-2025-W40', NULL, NULL);
@@ -66,7 +66,7 @@ VALUES
 /* ----------------------------------------------------------------------
    7) Entradas de menu (almoço/jantar)
    -------------------------------------------------------------------- */
-INSERT INTO menu_entries
+INSERT IGNORE INTO menu_entries
   (id, `date`, meal_type, main_dish_id, alt_dish_id, dessert_id, sopa_id, notes)
 VALUES
   ('menu-entry-2025-06-02-almoco', '2025-06-02', 'almoco',
