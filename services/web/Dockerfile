@@ -9,13 +9,12 @@ COPY ./app /usr/src/app
 # Instala dependências
 RUN npm install
 
-# Compila o frontend
-RUN npm run build
-
 # Expõe a porta usada pelo Next.js
 EXPOSE 3000
 
 # Inicia o servidor em produção
 CMD ["npm", "run", "dev"]
 
+# Inicia o servidor com compilação prévia
+# RUN npm run build
 # CMD ["npm", "run", "start"]

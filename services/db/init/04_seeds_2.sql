@@ -4,7 +4,6 @@ USE cantina_db;
 
 -- Inserção de pratos
 INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES ('dish-sopa-chuchu-feijao', 'Sopa de chuchu e feijão vermelho', 'sopa', 'Sopa leve e nutritiva com chuchu e feijão.', 2.5, 120)
-INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES ('dish-frango-legumes', 'Salteado de frango com legumes', 'carne', 'Frango salteado com legumes e massa fusilli.', 6.5, 700)
 INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES ('dish-calamares-tomate', 'Calamares à Romana com arroz de tomate', 'peixe', 'Calamares crocantes com arroz de tomate.', 7.0, 680)
 INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES ('dish-moqueca-tofu', 'Moqueca de tofu com arroz branco', 'vegan', 'Moqueca vegana rica em sabor.', 6.0, 600)
 INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES ('dish-fruta', 'Fruta', 'sobremesa', 'Fruta fresca da época.', 1.5, 80)

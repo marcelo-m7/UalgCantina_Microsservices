@@ -2,9 +2,7 @@
 
 services:
   db:
-    build:
-      context: ./services/db
-      dockerfile: Dockerfile
+    image: mysql:8.0  # usa a imagem oficial
     container_name: app_db
     env_file:
       - .env
@@ -45,10 +43,8 @@ services:
       - .env
     depends_on:
       db:
-        condition: service_healthy
-    volumes:
-      # Monta todo o código-fonte no container para hot-reload
-      - ./services/api/app:/app
+        condition: service_healthy # Aguarda o banco de dados estar pronto
+
 
   web:
     build:
@@ -61,9 +57,6 @@ services:
       - .env
     depends_on:
       - api
-    volumes:
-      # Monta todo o código-fonte do Next.js no container para hot-reload
-      - ./services/web/app:/usr/src/app
 
 volumes:
   db_data:
