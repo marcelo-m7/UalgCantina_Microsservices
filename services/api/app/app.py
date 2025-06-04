@@ -10,9 +10,6 @@ import config
 import crud, models, schemas
 from database import engine, Base, init_db
 from deps import get_db, verify_token
-from dotenv import load_dotenv
-
-load_dotenv(".env")
 
 app = FastAPI(
     title="API Cantina",

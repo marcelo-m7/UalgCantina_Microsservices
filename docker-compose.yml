@@ -15,7 +15,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
-      - ./services/db/app/init:/docker-entrypoint-initdb.d
+      - ./services/db/init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "--silent", "-u", "root", "-p${MYSQL_PASSWORD}"]
       interval: 5s
@@ -44,7 +44,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       # Monta todo o código-fonte no container para hot-reload
       - ./services/api/app:/app

@@ -1,3 +1,6 @@
+-- services/db/init/04_seeds.sql
+
+USE cantina_db;
 
 -- Inserção de pratos
 INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES ('dish-sopa-chuchu-feijao', 'Sopa de chuchu e feijão vermelho', 'sopa', 'Sopa leve e nutritiva com chuchu e feijão.', 2.5, 120)

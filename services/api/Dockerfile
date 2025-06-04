@@ -6,6 +6,9 @@ WORKDIR /api/app
 
 COPY ./app/requirements.txt /api/app/requirements.txt
 
+COPY ./app/wait-for-mysql.sh /wait-for-mysql.sh
+RUN chmod +x /wait-for-mysql.sh
+
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r /api/app/requirements.txt
 

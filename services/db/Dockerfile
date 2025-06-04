@@ -5,7 +5,5 @@ FROM mysql:8.0
 COPY my.cnf /etc/mysql/conf.d/my.cnf
 
 # Copie scripts SQL adicionais ou scripts shell, se necessário
-COPY init /docker-entrypoint-initdb.d
+# COPY init /docker-entrypoint-initdb.d
 
-# (Opcional) Instale dependências extra
-RUN apt-get update && apt-get install -y less vim

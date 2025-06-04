@@ -1,6 +1,6 @@
 -- services/db/init/02_tables.sql
 
--- USE cantina_db;
+USE cantina_db;
 
 -- 1) Tabela de usuários
 CREATE TABLE IF NOT EXISTS users (

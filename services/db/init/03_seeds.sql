@@ -1,6 +1,6 @@
 -- services/db/init/03_seeds.sql
 
--- USE cantina_db;
+USE cantina_db;
 
 -- Desliga verificações para evitar erros de FK durante o seed
 SET FOREIGN_KEY_CHECKS = 0;
