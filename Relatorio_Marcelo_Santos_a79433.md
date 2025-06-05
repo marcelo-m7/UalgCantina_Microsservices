@@ -1,6 +1,7 @@
 # Relatório do Projeto CantinaCast
 
 **Aluno:** Marcelo Santos (`a79433@ualg.pt`)
+**Repositório GitHub:** Marcelo Santos (`https://github.com/marcelo-m7/UalgCantina_Microsservices`)
 
 Este relatório descreve o desenvolvimento do projeto **CantinaCast**, uma aplicação web baseada em microsserviços para gestão de ementas na Universidade do Algarve. O trabalho segue os requisitos do "Trabalho 2 de Computação em Nuvem 2024/25".
 
@@ -39,3 +40,5 @@ O repositório inclui os arquivos `docker-compose.yml`, Dockerfiles para cada se
 ## Considerações Finais
 
 Enfrentei dificuldades ao compilar o frontend para execução fora do modo de desenvolvimento. Por esse motivo, no arquivo `services/web/Dockerfile`, a linha `# CMD ["npm", "run", "start"]` está comentada, e o script em execução é o `dev`, que compila as páginas dinamicamente no momento do acesso. Isso pode tornar a navegação um pouco mais lenta nas primeiras visitas. No entanto, o professor pode testar a substituição do script por `start`, o que fará com que o servidor Next.js compile todo o frontend antecipadamente, antes de disponibilizar o acesso à aplicação.
+
+ [*Repositório GitHub*](https://github.com/marcelo-m7/UalgCantina_Microsservices)
