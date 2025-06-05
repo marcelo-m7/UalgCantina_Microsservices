@@ -99,7 +99,6 @@ bash
 ```
 bash
     docker-compose up --build
-    
 ```
 Este comando irá construir as imagens Docker para cada serviço (frontend, backend, database) e iniciar os contêineres.
 
