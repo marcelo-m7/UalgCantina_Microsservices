@@ -31,12 +31,14 @@ def verify_token(
     Lança 401 ou 403 em caso de falha.
     """
     print("[DEBUG] Verifying Firebase token")
+    print(credentials)
     if not credentials or not credentials.scheme.lower() == "bearer":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token de autenticação faltando ou inválido",
         )
     token = credentials.credentials
+    print("[DEBUG] Token:", token)
 
     try:
         # Verifica no Google os tokens <https://firebase.google.com/docs/auth/admin/verify-id-tokens>

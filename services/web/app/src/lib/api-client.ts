@@ -15,6 +15,7 @@ apiClient.interceptors.request.use(
     if (user) {
       try {
         const token = await user.getIdToken();
+        console.log('ID token:', token);
         config.headers.Authorization = `Bearer ${token}`;
       } catch (error) {
         console.error('Error getting ID token:', error);
