@@ -33,7 +33,11 @@ O repositório inclui os arquivos `docker-compose.yml`, Dockerfiles para cada se
     VALUES
       ('Marcelo Santos', 'marcelosouzasantos77@gmail.com', 'admin');
    ```
-3. Copiar `.env.example` para `.env` e definir as variáveis necessárias (credenciais de base de dados e chaves do Firebase).
+3. Copiar `.env.example` para `.env`:
+   ```
+   bash
+      cp .env.example .env
+   ```
 4. Executar `docker-compose up --build` para criar e iniciar os containers.
 5. Aceder ao frontend em `http://localhost:3000` e à documentação da API em `http://localhost:8000/docs`.
 

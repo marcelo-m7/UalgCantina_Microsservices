@@ -89,13 +89,12 @@ cantinacast/
 
 Certifique-se de ter o Docker e o Docker Compose instalados.
 
-1.  **Configurar Variáveis de Ambiente:** Copie o arquivo `.env.example` para `.env` na raiz do projeto e preencha com as credenciais e configurações apropriadas (especialmente as credenciais do MySQL).
+1.  **Configurar Variáveis de Ambiente:** Copie o arquivo `.env.example` para `.env` na raiz do projeto (Já está com as variáveis setadas)
 ```
 bash
     cp .env.example .env
-    # Edite o arquivo .env com seus valores
-    
 ```
+
 2.  **Construir e Iniciar os Serviços:** No terminal, navegue até a pasta raiz do projeto (onde está o `docker-compose.yml`) e execute o seguinte comando:
 ```
 bash
