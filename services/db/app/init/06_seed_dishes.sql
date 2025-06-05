@@ -26,7 +26,7 @@ INSERT IGNORE INTO allergens (id, name, icon, description) VALUES
 /*---------------------------------------------------------------------------
   2) Pratos  (ON DUPLICATE para evitar erro caso já existam)
 ---------------------------------------------------------------------------*/
-INSERT INTO dishes (id, name, `type`, description, price, kcals) VALUES
+INSERT IGNORE INTO dishes (id, name, `type`, description, price, kcals) VALUES
   -- Carnes
   ('dish-feijoada-porco',   'Feijoada à Transmontana', 'carne',
      'Feijoada tradicional de feijão branco com enchidos e carne de porco.', 6.90, 780),
