@@ -353,30 +353,3 @@ As tabelas são criadas automaticamente via `Base.metadata.create_all()` na inic
          return claims
      ```
    * Nesse caso, você deve atribuir custom claims de `role` (admin/editor) aos usuários diretamente no Firebase.
-
-## Observações Finais
-
-* **Sem migrações automáticas (Alembic)**
-
-  * Este projeto utiliza `Base.metadata.create_all()` para criar tabelas ao iniciar.
-  * Se alterar os modelos, será necessário recriar manualmente o banco ou dropar tabelas antigas.
-
-* **IDs**
-
-  * Espera-se que o frontend envie o campo `id` como string (UUID ou ULID).
-  * Se preferir gerar os IDs no backend, modifique as funções de `create_*` em `crud.py` para usar, por exemplo, `import uuid` e `str(uuid.uuid4())`.
-
-* **CORS**
-
-  * A variável `ALLOWED_ORIGINS` no `.env` aceita múltiplas origens separadas por vírgula (será convertida para lista de strings automaticamente).
-  * Ajuste conforme o(s) domínio(s) do seu frontend.
-
-* **Testes e Desenvolvimento**
-
-  * Após fazer alterações nos modelos, reinicie o servidor para recriar as tabelas (ou drope-as manualmente).
-  * Utilize o Swagger UI (`/docs`) para testar interativamente as rotas.
-  * No frontend Next.js, configure:
-
-    ```env
-    NEXT_PUBLIC_API_URL=http://localhost:8000   # Mudaremos para a URL do Frontend
-    ```

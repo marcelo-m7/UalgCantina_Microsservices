@@ -1,112 +1,263 @@
-# CantinaCast - Sistema de Gestão de Ementas da UAlg
+# 📦 TP3 — Contetores em Cloud - UAlg Cantina
 
-## Visão Geral
+---
 
-O CantinaCast é um sistema web moderno e responsivo para a gestão e visualização das ementas da cantina da Universidade do Algarve (UAlg). O projeto visa fornecer uma plataforma eficiente para administradores gerenciarem alérgenos, pratos e ementas semanais, ao mesmo tempo que oferece aos utilizadores finais uma interface intuitiva para consultar as opções de refeição e, futuramente, obter sugestões personalizadas.
+## Rede
 
-## Funcionalidades Chave
+- API (Contentor)
+    URL: https://ualgcantina-api-847590019108.europe-west1.run.app/
 
-*   **Gestão de Alérgenos**: Cadastro, edição e exclusão de alérgenos com informações detalhadas e ícones.
-*   **Gestão de Pratos**: Cadastro, edição e exclusão de pratos, associando-os a tipos (carne, peixe, vegetariano, etc.), preços, informações nutricionais (kcal) e alérgenos.
-*   **Gestão de Ementas Semanais**: Definição da ementa para cada dia da semana (almoço e jantar), associando pratos (sopa, prato principal, alternativo, sobremesa).
-*   **Visualização Pública da Ementa**: Interface amigável para utilizadores consultarem a ementa da semana atual.
-*   **AI Suggestions (Futuro)**: Implementação de um motor de sugestões baseado em IA para auxiliar utilizadores com escolhas de pratos (ex: sugestões de harmonização de pratos).
+    Variáveis:
+    ```
+    MYSQL_USER=cantina_user
+    MYSQL_PASSWORD=
+    MYSQL_HOST=ualg-cantina-a79433:northamerica-northeast2:cantinacas-tdb
+    MYSQL_PORT=3306
+    MYSQL_DB=cantina_db
+    FIREBASE_PROJECT_ID=ualg-cantina
+    ```
 
-## Arquitetura
+- Banco de Dados MySQL (Cloud SQL Instance):
+    ```
+    Nome da conexão
+    ualg-cantina-a79433:northamerica-northeast2:cantinacas-tdb 
+    
+    Conectividade de IP particular
+    Ativado
+        Rede associada
+        projects/ualg-cantina-a79433/global/networks/default 
+        Rede
+        default
+        Método de conexão de serviço
+        Acesso privado a serviços
+        Intervalo de IP alocado
+        Intervalo de IPs atribuído automaticamente
+        Endereço IP interno
+        10.81.16.3
+    Conectividade de IP público
+    Ativado
+        Endereço IP público
+        34.130.199.30 
+    ```
 
-O CantinaCast adota uma arquitetura de microsserviços (ou, neste caso, serviços componentes) Dockerizados:
+services/db/README.md
+## Endpoints da API
 
-*   **Frontend**: Desenvolvido com **Next.js (React)** para uma interface de utilizador rápida e dinâmica.
-*   **Backend**: Construído com **FastAPI (Python)**, fornecendo uma API robusta e performática para gerenciar os dados.
-*   **Banco de Dados**: Utiliza **MySQL** para armazenamento seguro e eficiente dos dados.
-*   **Containerização**: Todos os serviços são empacotados e orquestrados usando **Docker** e **Docker Compose**, garantindo ambientes de desenvolvimento e produção consistentes.
-*   **Autenticação**: Integração com **Firebase Authentication** para gestão de utilizadores (administradores).
-*   **AI (Futuro)**: Utilização de **Vertex AI Genkit** para funcionalidades de IA.
+Todos os endpoints estão sob o prefixo ``.
 
-## Entidades Principais e Interação com API
+### Rotas Públicas
 
-A aplicação interage com a API backend via endpoints RESTful:
+* **`GET /allergens/`**
+  Retorna a lista de todos os alergénios.
+  **Autenticação:** Nenhuma.
 
-### Alérgenos (`Allergen`)
+* **`GET /dishes/`**
+  Retorna a lista de todos os pratos (incluindo campos básicos e IDs de alergénios).
+  **Autenticação:** Nenhuma.
 
-*   Representa substâncias que podem causar reações alérgicas.
-*   Campos: `id`, `name`, `icon`, `description`.
-*   Endpoints: `GET /allergens/`, `POST /allergens/`, `PUT /allergens/{id}`, `DELETE /allergens/{id}`.
+* **`GET /dishes/{dish_id}`**
+  Retorna os detalhes de um prato específico, incluindo lista de alergénios.
+  **Autenticação:** Nenhuma.
 
-### Pratos (`Dish`)
+* **`GET /public/weekly/`**
+  Retorna todos os registros de `MenuEntry`. O frontend pode filtrar por data (`date`) e tipo de refeição (`meal_type`).
+  **Autenticação:** Nenhuma.
 
-*   Itens alimentares servidos na cantina.
-*   Campos: `id`, `name`, `type`, `description`, `price`, `kcals`, `allergenIds`.
-*   Endpoints: `GET /dishes/`, `POST /dishes/`, `PUT /dishes/{id}`, `DELETE /dishes/{id}`.
+### Rotas Protegidas (requerem ID Token do Firebase)
 
-### Ementas (`WeeklyMenu`, `DayMenu`, `MenuEntry`)
+As rotas de escrita exigem um header no formato:
 
-*   Define o calendário semanal de refeições.
-*   Campos: `weekId`, `startDate`, `endDate`, `days` (WeeklyMenu); `date`, `lunch`, `dinner` (DayMenu); `id`, `date`, `mealType`, `mainDishId`, `mainDish`, `altDishId`, `altDish`, `dessertId`, `dessert`, `sopaId`, `sopa`, `notes` (MenuEntry).
-*   Endpoints: `GET /public/weekly/`, `GET /menus/weekly-admin/`, `PUT /menus/day/{date}/{mealType}`.
-
-## Guia de Dockerização
-
-Este projeto está configurado para ser executado facilmente usando Docker Compose. A estrutura de pastas reflete a separação dos serviços:
 ```
-text
-cantinacast/
-├── web/               # Frontend Next.js
-│   ├── Dockerfile
-│   └── ...
-├── api/               # Backend FastAPI
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   ├── main.py
-│   ├── db.py
-│   ├── auth.py
-│   ├── models.py
-│   └── routers/
-│       ├── allergens.py
-│       ├── dishes.py
-│       └── menus.py
-├── services/
-│   ├── db/            # Banco de dados MySQL
-│   │   ├── Dockerfile
-│   │   └── init/
-│   │       ├── 00_init.sql
-│   │       ├── 01_tables.sql
-│   │       ├── 02_seeds.sql
-│   │       └── 03_simple_data.sql
-├── .env               # Variáveis de ambiente (NÃO commitar valores sensíveis!)
-├── .env.example       # Exemplo de variáveis de ambiente (para commit)
-└── docker-compose.yml # Orquestração dos containers
-```
-*   **web/Dockerfile**: Define a imagem Docker para a aplicação Next.js.
-*   **api/Dockerfile**: Define a imagem Docker para o backend FastAPI.
-*   **db/Dockerfile**: Define a imagem Docker para o banco de dados MySQL (baseado na imagem oficial).
-*   **.env**: Contém as variáveis de ambiente reais (credenciais do DB, URL da API, etc.). **Mantenha este arquivo fora do controle de versão em repositórios públicos.**
-*   **.env.example**: Um arquivo de exemplo para as variáveis de ambiente, com placeholders para valores sensíveis.
-*   **docker-compose.yml**: Orquestra os três serviços (`web`, `api`, `db`), definindo suas dependências, portas e volumes.
-
-
-## Como Executar o Projeto com Docker Compose
-
-Certifique-se de ter o Docker e o Docker Compose instalados.
-
-1.  **Configurar Variáveis de Ambiente:** Copie o arquivo `.env.example` para `.env` na raiz do projeto (Já está com as variáveis setadas)
-```
-bash
-    cp .env.example .env
+Authorization: Bearer <ID_TOKEN_DO_FIREBASE>
 ```
 
-2.  **Construir e Iniciar os Serviços:** No terminal, navegue até a pasta raiz do projeto (onde está o `docker-compose.yml`) e execute o seguinte comando:
-```
-bash
-    docker-compose up --build
-```
-Este comando irá construir as imagens Docker para cada serviço (frontend, backend, database) e iniciar os contêineres.
+O token será verificado contra o projeto Firebase definido em `FIREBASE_PROJECT_ID`. Se inválido ou ausente, a API retorna 401.
 
-3.  **Verificar os Logs:** Acompanhe os logs no terminal para garantir que todos os serviços iniciaram sem erros.
+* **`POST /allergens/`**
+  Cria um novo alergénio.
+  **Corpo (JSON):**
 
-4.  **Acessar a Aplicação:**
+  ```json
+  {
+    "id": "allergen-uuid-ou-ulid",
+    "name": "Glúten",
+    "icon": "wheat",
+    "description": "Contém trigo"
+  }
+  ```
 
-    *   **Frontend:** Abra o navegador em `http://localhost:3000`. Você deverá ver a interface do utilizador (se o frontend já tiver sido implementado).
-    *   **API Docs (Swagger UI):** A documentação interativa da API FastAPI está disponível em ` https://ualgcantina-api-847590019108.europe-west1.run.app/docs/`. Você pode explorar os endpoints e testá-los diretamente no navegador.
-    *   **Banco de Dados:** O banco de dados MySQL estará rodando e acessível internamente pelos contêineres via hostname `db` na porta 3306. Externamente (se desejar conectar com um cliente SQL), pode usar `34.130.199.30:3306` (IP Público) ou `10.81.16.3:3306` (IP Interno)com as credenciais definidas no `.env`.
+  **Autenticação:** Sim.
 
+* **`PUT /allergens/{allergen_id}`**
+  Atualiza um alergénio existente (qualquer campo enviado no corpo será modificado).
+  **Corpo (JSON):**
+
+  ```json
+  {
+    "name": "Novo Nome",
+    "icon": "novo_icon",
+    "description": "Nova descrição"
+  }
+  ```
+
+  **Autenticação:** Sim.
+
+* **`DELETE /allergens/{allergen_id}`**
+  Remove um alergénio.
+  **Autenticação:** Sim (Retorna 204 se removido com sucesso ou nada se não encontrado).
+
+* **`POST /dishes/`**
+  Cria um novo prato.
+  **Corpo (JSON):**
+
+  ```json
+  {
+    "id": "dish-uuid-ou-ulid",
+    "name": "Frango Grelhado",
+    "type": "carne",
+    "description": "Frango com ervas",
+    "price": 12.5,
+    "kcals": 450,
+    "allergen_ids": ["allergen-id-1", "allergen-id-2"]
+  }
+  ```
+
+  **Autenticação:** Sim.
+
+* **`PUT /dishes/{dish_id}`**
+  Atualiza um prato existente (qualquer campo enviado no corpo será modificado).
+  **Corpo (JSON):**
+
+  ```json
+  {
+    "name": "Novo Nome",
+    "price": 15.0,
+    "allergen_ids": ["outro-allergen-id"]
+  }
+  ```
+
+  **Autenticação:** Sim.
+
+* **`DELETE /dishes/{dish_id}`**
+  Remove um prato.
+  **Autenticação:** Sim (Retorna 204 se removido com sucesso ou nada se não encontrado).
+
+* **`GET /menus/{date_str}/{meal_type}`**
+  Consulta uma entrada de menu específica para uma data e tipo de refeição.
+
+  * `date_str`: formato `YYYY-MM-DD`
+  * `meal_type`: `"almoco"` ou `"jantar"`
+    **Exemplo:** `/menus/2025-06-01/almoco`
+    **Autenticação:** Sim.
+
+* **`POST /menus/`**
+  Cria uma nova entrada de menu para data e tipo de refeição.
+  **Corpo (JSON):**
+
+  ```json
+  {
+    "id": "menuentry-uuid-ou-ulid",
+    "date": "2025-06-01",
+    "meal_type": "almoco",
+    "main_dish_id": "uuid-prato-principal",
+    "alt_dish_id": "uuid-prato-alternativo",       // opcional
+    "dessert_id": "uuid-sobremesa",
+    "sopa_id": "uuid-sopa",                        // opcional
+    "notes": "Sem glúten hoje"
+  }
+  ```
+
+  **Autenticação:** Sim.
+
+* **`PUT /menus/{date_str}/{meal_type}`**
+  Atualiza uma entrada de menu já existente.
+  **Corpo (JSON):**
+
+  ```json
+  {
+    "main_dish_id": "novo-uuid-prato",
+    "alt_dish_id": null,
+    "dessert_id": "novo-uuid-sobremesa",
+    "sopa_id": "novo-uuid-sopa",
+    "notes": "Atualização de nota"
+  }
+  ```
+
+  **Autenticação:** Sim.
+
+* **`DELETE /menus/{date_str}/{meal_type}`**
+  Remove uma entrada de menu específica (se existir).
+  **Autenticação:** Sim (Retorna 204 se removido com sucesso ou nada se não existir).
+
+## Esquema do Banco de Dados
+
+A estrutura de tabelas no MySQL é:
+
+* **`allergens`**
+
+  * `id` (VARCHAR(36), PK)
+  * `name` (VARCHAR(100), UNIQUE, NOT NULL)
+  * `icon` (VARCHAR(200), NULL)
+  * `description` (TEXT, NULL)
+
+* **`dishes`**
+
+  * `id` (VARCHAR(36), PK)
+  * `name` (VARCHAR(100), UNIQUE, NOT NULL)
+  * `type` (ENUM: `carne`, `peixe`, `vegetariano`, `vegan`, `sobremesa`, `sopa`, `bebida`)
+  * `description` (TEXT, NULL)
+  * `price` (FLOAT, NOT NULL)
+  * `kcals` (INT, NULL)
+
+* **`dish_allergen`** (tabela de associação many-to-many)
+
+  * `dish_id` (VARCHAR(36), FK → `dishes.id`)
+  * `allergen_id` (VARCHAR(36), FK → `allergens.id`)
+
+* **`menu_entries`**
+
+  * `id` (VARCHAR(36), PK)
+  * `date` (DATE, NOT NULL)
+  * `meal_type` (VARCHAR(10), NOT NULL) – valores esperados: `"almoco"` ou `"jantar"`
+  * `main_dish_id` (VARCHAR(36), FK → `dishes.id`, NOT NULL)
+  * `alt_dish_id` (VARCHAR(36), FK → `dishes.id`, NULL)
+  * `dessert_id` (VARCHAR(36), FK → `dishes.id`, NOT NULL)
+  * `sopa_id` (VARCHAR(36), FK → `dishes.id`, NULL)
+  * `notes` (TEXT, NULL)
+
+As tabelas são criadas automaticamente via `Base.metadata.create_all()` na inicialização da API.
+
+## Autenticação e Autorização
+
+1. **Como funciona a verificação de token do Firebase**
+
+   * O frontend Next.js deve obter um ID Token válido do Firebase (usando Firebase Auth) após o login do usuário.
+   * Em todas as requisições a rotas protegidas, deverá enviar o header:
+
+     ```
+     Authorization: Bearer <ID_TOKEN_DO_FIREBASE>
+     ```
+   * Na rota, o `Depends(verify_firebase_token)` no `deps.py` faz:
+
+     * Validação da assinatura e expiração do token.
+     * Verifica se o `issuer` (iss) corresponde ao seu projeto (via `FIREBASE_PROJECT_ID`).
+     * Retorna as *claims* decodificadas se o token for válido.
+
+2. **Controle de Acesso / Perfis**
+
+   * Atualmente, não há distinção de perfis (admin/editor) codificada no backend — qualquer token válido do Firebase consegue acessar as rotas protegidas.
+   * Caso queira controlar por perfil, adicione checagem de `claims.get("role")` dentro de `get_current_user()` em `deps.py`, por exemplo:
+
+     ```python
+     def get_current_user(claims: dict = Depends(verify_firebase_token)):
+         role = claims.get("role")
+         if role not in ("admin", "editor"):
+             raise HTTPException(status_code=403, detail="Permissão insuficiente")
+         return claims
+     ```
+   * Nesse caso, você deve atribuir custom claims de `role` (admin/editor) aos usuários diretamente no Firebase.
+
+
+## Observações Finais
+
+*Falta subir conteiner web e configurar Cloud Function Run para registrar acessos, 

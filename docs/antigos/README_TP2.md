@@ -84,11 +84,12 @@ cantinacast/
 *   **.env.example**: Um arquivo de exemplo para as variáveis de ambiente, com placeholders para valores sensíveis.
 *   **docker-compose.yml**: Orquestra os três serviços (`web`, `api`, `db`), definindo suas dependências, portas e volumes.
 
+
 ## Como Executar o Projeto com Docker Compose
 
 Certifique-se de ter o Docker e o Docker Compose instalados.
 
-1.  **Configurar Variáveis de Ambiente:** Copie o arquivo `.env.example` para `.env` na raiz do projeto:
+1.  **Configurar Variáveis de Ambiente:** Copie o arquivo `.env.example` para `.env` na raiz do projeto (Já está com as variáveis setadas)
 ```
 bash
     cp .env.example .env
@@ -98,7 +99,6 @@ bash
 ```
 bash
     docker-compose up --build
-    
 ```
 Este comando irá construir as imagens Docker para cada serviço (frontend, backend, database) e iniciar os contêineres.
 
@@ -107,7 +107,6 @@ Este comando irá construir as imagens Docker para cada serviço (frontend, back
 4.  **Acessar a Aplicação:**
 
     *   **Frontend:** Abra o navegador em `http://localhost:3000`. Você deverá ver a interface do utilizador (se o frontend já tiver sido implementado).
-    *   **API Docs (Swagger UI):** A documentação interativa da API FastAPI está disponível em ` https://ualgcantina-api-847590019108.europe-west1.run.app/docs/docs`. Você pode explorar os endpoints e testá-los diretamente no navegador.
-    *   **Banco de Dados:** O banco de dados MySQL estará rodando e acessível internamente pelos contêineres via hostname `db` na porta 3306. Externamente (se desejar conectar com um cliente SQL), pode usar `localhost:3306` com as credenciais definidas no `.env`.
+    *   **API Docs (Swagger UI):** A documentação interativa da API FastAPI está disponível em ` https://ualgcantina-api-847590019108.europe-west1.run.app/docs/`. Você pode explorar os endpoints e testá-los diretamente no navegador.
+    *   **Banco de Dados:** O banco de dados MySQL estará rodando e acessível internamente pelos contêineres via hostname `db` na porta 3306. Externamente (se desejar conectar com um cliente SQL), pode usar `34.130.199.30:3306` (IP Público) ou `10.81.16.3:3306` (IP Interno)com as credenciais definidas no `.env`.
 
-Para parar os serviços, pressione `Ctrl+C` no terminal onde o `docker-compose up` está a correr. Para remover os contêineres e redes (mas mantendo os dados do banco), use `docker-compose down`. Para remover contêineres, redes e os dados do banco (volume), use `docker-compose down -v` (use com cuidado!).
