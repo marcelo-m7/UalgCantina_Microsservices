@@ -9,6 +9,7 @@ env/
 ENV/
 venv/
 .ENV/
+.env
 env.bak/
 venv.bak/
 
@@ -62,5 +63,5 @@ Desktop.ini
 # .env
 
 # Docker files themselves (opcional)
-Dockerfile
-docker-compose.yml
+# Dockerfile
+# docker-compose.yml

@@ -6,9 +6,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from datetime import date
 
-import config
 import crud, models, schemas
-from database import engine, Base, init_db
+from database import init_db
 from deps import get_db, verify_token
 
 app = FastAPI(

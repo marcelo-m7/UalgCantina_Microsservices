@@ -1,67 +1,61 @@
 ###############################################################################
 #  DOCKER-COMPOSE — micro-serviços “Cantina”                                 #
-#  • Serviço MySQL agora É CONSTRUÍDO a partir de ./services/db/Dockerfile   #
-#  • Ficheiros SQL  ➜  services/db/app/init/                                 #
-#  • my.cnf         ➜  services/db/app/my.cnf                                  #
 ###############################################################################
 
 services:
-# ────────────────────────────────  DATABASE  ──────────────────────────────── #
-  db:
-    build:
-      context: ./services/db          #  ↳  contém o Dockerfile
-      dockerfile: Dockerfile
-    container_name: app_db
+  # ────────────────────────────────  DATABASE  ──────────────────────────────── #
+  # db:
+  #   image: marcelom7/ualgcantina-db:latest
+  #   build:
+  #     context: ./services/db
+  #     dockerfile: Dockerfile
+  #   container_name: app_db
+  #   env_file: .env
+  #   environment:
+  #     MYSQL_DATABASE:      ${MYSQL_DB}
+  #     MYSQL_USER:          ${MYSQL_USER}
+  #     MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+  #   volumes:
+  #     - db_data:/var/lib/mysql
+  #   healthcheck:
+  #     test: >
+  #       mysqladmin ping -h127.0.0.1 -P3306
+  #       -uroot -p${MYSQL_PASSWORD} --silent
+  #     start_period: 25s
+  #     interval:     10s
+  #     timeout:      5s
+  #     retries:      5
+  #   restart: unless-stopped
 
-    env_file: .env
-    environment:
-      MYSQL_DATABASE:       ${MYSQL_DB}
-      MYSQL_USER:           ${MYSQL_USER}
-      MYSQL_PASSWORD:       ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD:  ${MYSQL_PASSWORD}
+  # ────────────────────────────────  PHPMYADMIN  ───────────────────────────── #
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin:latest
+  #   container_name: app_phpmyadmin
+  #   ports:
+  #     - "8081:80"
+  #   env_file: .env
+  #   environment:
+  #     PMA_HOST: db
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   restart: unless-stopped
 
-    # Persistência apenas dos dados (o init e o my.cnf são copiados na imagem)
-    volumes:
-      - db_data:/var/lib/mysql
-
-    # Espera o servidor ficar mesmo operacional
-    healthcheck:
-      test: >
-        mysqladmin ping -h127.0.0.1 -P3306
-        -uroot -p${MYSQL_PASSWORD} --silent
-      start_period: 25s
-      interval:     10s
-      timeout:      5s
-      retries:      5
-
-# ────────────────────────────────  PHPMYADMIN  ───────────────────────────── #
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: app_phpmyadmin
-    ports:
-      - "8081:80"
-    env_file: .env
-    environment:
-      PMA_HOST: db
-    depends_on:
-      db:
-        condition: service_healthy        # só arranca quando MySQL estiver OK
-
-# ────────────────────────────────────  API  ───────────────────────────────── #
+  # ────────────────────────────────────  API  ───────────────────────────────── #
   api:
+    image: marcelom7/ualgcantina-api:latest
     build:
       context: ./services/api
       dockerfile: Dockerfile
     container_name: app_api
     ports:
-      - "8000:8000"
+      - "8080:8080"
     env_file: .env
-    depends_on:
-      db:
-        condition: service_healthy
 
-# ────────────────────────────────────  WEB  ──────────────────────────────── #
+  # ────────────────────────────────────  WEB  ──────────────────────────────── #
   web:
+    image: marcelom7/ualgcantina-web:latest
     build:
       context: ./services/web
       dockerfile: Dockerfile
@@ -69,9 +63,11 @@ services:
     ports:
       - "3000:3000"
     env_file: .env
-    depends_on:
-      - api                               # arranca depois da API
+    # depends_on:
+      # api:
+      #   condition: service_healthy
+    restart: unless-stopped
 
 # ─────────────────────────────────  VOLUMES  ─────────────────────────────── #
-volumes:
-  db_data:
+# volumes:
+#   db_data:

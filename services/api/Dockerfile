@@ -14,6 +14,6 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 COPY ./app /api/app
 
-EXPOSE 8000
+EXPOSE 80
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]     

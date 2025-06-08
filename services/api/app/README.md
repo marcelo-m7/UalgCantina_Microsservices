@@ -53,7 +53,6 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
    ```bash
    pip install -r requirements.txt
    ```
-
 2. **Configure as variáveis de ambiente:**
 
    * Copie o exemplo de arquivo `.env.example` para `.env`:
@@ -61,38 +60,83 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
      ```bash
      cp .env.example .env
      ```
-   * Edite o arquivo `.env` e preencha com as credenciais corretas do MySQL e o seu `FIREBASE_PROJECT_ID`.
 
-   Exemplo de `.env` final:
 
    ```env
    # Configuração do MySQL
-   MYSQL_USER=cantina_user
-   MYSQL_PASSWORD=senhaSegura123
-   MYSQL_HOST=localhost
-   MYSQL_PORT=3306
-   MYSQL_DB=cantina_db
+    MYSQL_USER=cantina_user
+    MYSQL_PASSWORD=
+    MYSQL_HOST=
+    MYSQL_PORT=3306
+    MYSQL_DB=cantina_db
 
    # Configuração do Firebase
-   FIREBASE_PROJECT_ID=seu-projeto-firebase-id
+    FIREBASE_PROJECT_ID=ualg-cantina
 
    # CORS (origens permitidas pela API, separadas por vírgula)
-   ALLOWED_ORIGINS=http://localhost:3000
+    # ALLOWED_ORIGINS=
+  ```
+
+3. **Construção dos Web Apps:**
+
+  ```bash
+   # Proxy (Para testes locais)
+
+   .\cloud-sql-proxy.exe ualg-cantina-a79433:northamerica-northeast2:cantinacas-tdb
+   
+   # Artifact Registry comandos: 
+
+    docker build -t us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcantina/ualgcantina-api .
+
+    docker push us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcast/ualgcantina-api:latest
+
+   ```
+
+   ```bash
+   PS C:\Users\marce\OneDrive - Universidade do Algarve\Ualg\Cadeiras UALG 2024-2025\Computação em Núvem\TP3_Azure_Marcelo Santos_a79433\UalgCantina_Microsservices\services\api> docker push us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcantina/ualgcantina-api:latest
+    The push refers to repository [us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcantina/ualgcantina-api]      
+    ce1945dade9f: Layer already cd329745d8b6: Pushed        220040079aa8: Pushed        ee26a9841381: Pushed        MB/28.86MBa2: Pushed        9B/109B1ae5e: Layer already exists 465a5: Layer already 
+    2085f9e6ccae: Layer already c6212f1692bd: Pushed        latest: digest: sha256:354924ecce09b03ee874b7a5dccdf1416ef36bd183e190f80a3beae56c58e6b7 size: 856
+    PS C:\Users\marce\OneDrive - Universidade do Algarve\Ualg\Cadeiras UALG 2024-2025\Computação em Núvem\TP3_Azure_Marcelo Santos_a79433\UalgCantina_Microsservices\service
    ```
 
 ## Como Executar a API
 
-1. **Crie as tabelas no banco (opcional):**
-   O `init_db()` em `database.py` já chama `Base.metadata.create_all()`, então basta iniciar a aplicação e as tabelas serão criadas automaticamente se não existirem.
+- API (Contentor)
+    URL: https://ualgcantina-api-847590019108.europe-west1.run.app/docs/
 
-2. **Inicie o servidor FastAPI com Uvicorn:**
+    Variáveis:
+    ```
+    MYSQL_USER=cantina_user
+    MYSQL_PASSWORD=
+    MYSQL_HOST=ualg-cantina-a79433:northamerica-northeast2:cantinacas-tdb
+    MYSQL_PORT=3306
+    MYSQL_DB=cantina_db
+    FIREBASE_PROJECT_ID=ualg-cantina
+    ```
 
-   ```bash
-   uvicorn app:app --reload --host 0.0.0.0 --port 8000
-   ```
-
-3. **Acesse a documentação interativa (Swagger UI):**
-   Abra no navegador: `http://localhost:8000/docs`
+- Banco de Dados MySQL (Cloud SQL Instance):
+    ```
+    Nome da conexão
+    ualg-cantina-a79433:northamerica-northeast2:cantinacas-tdb 
+    
+    Conectividade de IP particular
+    Ativado
+        Rede associada
+        projects/ualg-cantina-a79433/global/networks/default 
+        Rede
+        default
+        Método de conexão de serviço
+        Acesso privado a serviços
+        Intervalo de IP alocado
+        Intervalo de IPs atribuído automaticamente
+        Endereço IP interno
+        10.81.16.3
+    Conectividade de IP público
+    Ativado
+        Endereço IP público
+        34.130.199.30 
+    ```
 
 ## Endpoints da API
 
@@ -334,5 +378,5 @@ As tabelas são criadas automaticamente via `Base.metadata.create_all()` na inic
   * No frontend Next.js, configure:
 
     ```env
-    NEXT_PUBLIC_API_URL=http://localhost:8000
+    NEXT_PUBLIC_API_URL=http://localhost:8000   # Mudaremos para a URL do Frontend
     ```

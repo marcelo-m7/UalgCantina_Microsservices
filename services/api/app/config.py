@@ -1,43 +1,42 @@
 # services/api/app/config.py
-
-from pydantic_settings import BaseSettings
+from typing import List, Optional
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    # MySQL connection variables
+    # ───── MySQL ──────────────────────────────────────────
     MYSQL_USER: str
     MYSQL_PASSWORD: str
-    MYSQL_HOST: str = "db" #"db"
+    MYSQL_HOST: str
     MYSQL_PORT: int = 3306
     MYSQL_DB: str
 
-    # Firebase
+    # ───── Firebase ──────────────────────────────────────
     FIREBASE_PROJECT_ID: str
 
-    # CORS
-    ALLOWED_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
+    # ───── CORS ───────────────────────────────────────────
+    # agora opcional – assume string vazia se não vier da env
+    ALLOWED_ORIGINS: Optional[str] = ""
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
+    # Config do Pydantic-Settings (v2)
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=False,   # permite usar nomes maiúsculos ou minúsculos
+    )
 
+    # ---------- helpers ----------
     @property
     def db_url(self) -> str:
-        """Build the SQLAlchemy database URL from settings."""
         return (
             f"mysql+pymysql://{self.MYSQL_USER}:{self.MYSQL_PASSWORD}"
-            f"@{'db'}:{self.MYSQL_PORT}/{self.MYSQL_DB}"  # ?charset=utf8mb4"
+            f"@{self.MYSQL_HOST}:{self.MYSQL_PORT}/{self.MYSQL_DB}"
         )
 
     @property
-    def allowed_origins_list(self) -> list[str]:
-        """
-        Returns CORS origins as a list.
-        Loaded from the environment variable ALLOWED_ORIGINS.
-        """
+    def allowed_origins_list(self) -> List[str]:
         return [
             origin.strip()
-            for origin in self.ALLOWED_ORIGINS.split(",")
+            for origin in (self.ALLOWED_ORIGINS or "").split(",")
             if origin.strip()
         ]
 
