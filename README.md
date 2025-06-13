@@ -68,6 +68,11 @@ Dentro de `functions/` instale as dependências e utilize o Azure Functions Core
 npm install
 func start
 ```
+O endpoint `GET /visits` pode ser testado localmente com:
+
+```bash
+curl http://localhost:7071/api/visits
+```
 
 ## Desdobramento
 
