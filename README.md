@@ -46,6 +46,20 @@ npm run build # utiliza Vite para gerar os ficheiros em webapp/dist
 
 Os ficheiros gerados ficarão em `webapp/dist`.
 
+## Desdobramento para a VM/Container
+
+Defina a variável `VITE_FUNCTION_URL` no ficheiro `.env` dentro de `webapp/` (ou
+exporte-a no mesmo terminal) antes de executar `npm run build` para que o valor
+seja injetado no HTML. Em seguida copie o conteúdo de `webapp/dist` para a
+máquina ou container que irá servir a aplicação, por exemplo:
+
+```bash
+scp -r webapp/dist/* usuario@host:/var/www/html/
+```
+
+Copie também a pasta `dashboard/web` para o mesmo diretório para que o
+dashboard seja disponibilizado junto com a webapp.
+
 ## Execução local da Function
 
 Dentro de `functions/` instale as dependências e utilize o Azure Functions Core Tools:
