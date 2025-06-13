@@ -2,6 +2,11 @@
   "name": "webapp",
   "version": "1.0.0",
   "scripts": {
-    "build": "echo 'building...'"
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
   }
 }
+
