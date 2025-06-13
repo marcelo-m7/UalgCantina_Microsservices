@@ -33,6 +33,7 @@ cp .env.sample .env
 ```
 
 As variáveis incluem a string de conexão do Storage e a URL da Azure Function.
+Use a chave `VITE_FUNCTION_URL` para que o build do Vite injete o endereço da função nas páginas.
 
 ## Build da WebApp
 
@@ -40,7 +41,7 @@ Dentro de `webapp/` execute:
 
 ```bash
 npm install
-npm run build
+npm run build # utiliza Vite para gerar os ficheiros em webapp/dist
 ```
 
 Os ficheiros gerados ficarão em `webapp/dist`.

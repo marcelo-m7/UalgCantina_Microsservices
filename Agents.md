@@ -35,7 +35,7 @@
 
 * [x] **Estrutura de Páginas**: criar pelo menos *Home*, *About*, *Contact*.
 * [x] **Integração com Function**: em cada carregamento de página, chamar a Azure Function (HTTP POST) para registar visita.
-* [ ] **Build & Serve**: configurar `vite.config.js` ou equivalente; `npm run build` deve produzir artefatos em `/dist`.
+* [x] **Build & Serve**: configurar `vite.config.js` ou equivalente; `npm run build` deve produzir artefatos em `/dist`.
 * [x] **README**: instruções de build, variáveis (.env).
 
 ### 2.3 Headless Function Agent
