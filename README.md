@@ -58,3 +58,24 @@ func start
 ## Desdobramento
 
 Os scripts em `scripts/` exemplificam como utilizar Azure CLI para enviar os artefatos.
+
+## Provisionamento da Infraestrutura
+
+Para criar todos os recursos Azure utilize o script de Terraform. Defina o nome
+do Resource Group e a senha da VM nas variáveis de ambiente:
+
+```bash
+export RESOURCE_GROUP=my-cantina-rg
+export ADMIN_PASSWORD='<SENHA_VM>'
+scripts/deploy_infra.sh
+```
+
+Após a execução é possível obter os endpoints e strings de conexão com:
+
+```bash
+cd infrastructure/terraform
+terraform output
+```
+
+Serão exibidos o endereço público da VM (`vm_public_ip`), a URL da Function
+(`function_url`) e a connection string do Storage (`storage_connection_string`).
