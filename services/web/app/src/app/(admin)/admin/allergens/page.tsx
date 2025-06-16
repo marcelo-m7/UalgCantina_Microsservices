@@ -63,7 +63,12 @@ export default function AllergensPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string, data: AllergenFormData }) => updateAllergen(id, data),
+    mutationFn: ({ id, data }: { id: string, data: AllergenFormData }) =>
+      updateAllergen(id, {
+        name: data.name,
+        icon: data.icon,
+        description: data.description,
+      }),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['allergens'] });
       toast({ title: "Alérgeno Atualizado", description: `O alérgeno "${data.name}" foi atualizado.`});
@@ -103,7 +108,8 @@ export default function AllergensPage() {
     if (editingAllergen && editingAllergen.id) {
       updateMutation.mutate({ id: editingAllergen.id, data });
     } else {
-      createMutation.mutate(data);
+      const payload = { ...data, id: crypto.randomUUID() };
+      createMutation.mutate(payload);
     }
   };
 
