@@ -110,4 +110,17 @@ Este comando irá construir as imagens Docker para cada serviço (frontend, back
     *   **API Docs (Swagger UI):** A documentação interativa da API FastAPI está disponível em `http://localhost:8000/docs`. Você pode explorar os endpoints e testá-los diretamente no navegador.
     *   **Banco de Dados:** O banco de dados MySQL estará rodando e acessível internamente pelos contêineres via hostname `db` na porta 3306. Externamente (se desejar conectar com um cliente SQL), pode usar `localhost:3306` com as credenciais definidas no `.env`.
 
-Para parar os serviços, pressione `Ctrl+C` no terminal onde o `docker-compose up` está a correr. Para remover os contêineres e redes (mas mantendo os dados do banco), use `docker-compose down`. Para remover contêineres, redes e os dados do banco (volume), use `docker-compose down -v` (use com cuidado!).
+## Commandos de Deploy
+
+```bash
+# docker build -t marcelom7/ualgcantina-web:latest .
+# docker build -t marcelom7/ualgcantina-web:latest .
+# docker push marcelom7/ualgcantina-web:latest
+# docker tag marcelom7/ualgcantina_microsservices-web:latest us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcantina/ualg-web:latest
+
+docker build . -t us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcantina/ualg-web:latest
+
+docker push us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcantina/ualg-web:latest
+
+gcloud run deploy ualgcantina-web  --image us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcantina/ualg-web:latest --region us-central1  --platform managed  --allow-unauthenticated  --set-env-vars NEXT_PUBLIC_API_URL=https://ualgcantina-api-847590019108.europe-west1.run.app/
+```

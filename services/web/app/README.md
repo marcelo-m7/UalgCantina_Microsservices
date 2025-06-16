@@ -106,8 +106,8 @@ Este comando irá construir as imagens Docker para cada serviço (frontend, back
 
 4.  **Acessar a Aplicação:**
 
-    *   **Frontend:** Abra o navegador em `http://localhost:8000`. Você deverá ver a interface do utilizador (se o frontend já tiver sido implementado).
-    *   **API Docs (Swagger UI):** A documentação interativa da API FastAPI está disponível em `http://localhost:8000/docs`. Você pode explorar os endpoints e testá-los diretamente no navegador.
+    *   **Frontend:** Abra o navegador em `http://localhost:8080 `. Você deverá ver a interface do utilizador (se o frontend já tiver sido implementado).
+    *   **API Docs (Swagger UI):** A documentação interativa da API FastAPI está disponível em `http://localhost:8080 /docs`. Você pode explorar os endpoints e testá-los diretamente no navegador.
     *   **Banco de Dados:** O banco de dados MySQL estará rodando e acessível internamente pelos contêineres via hostname `db` na porta 3306. Externamente (se desejar conectar com um cliente SQL), pode usar `localhost:3306` com as credenciais definidas no `.env`.
 
 Para parar os serviços, pressione `Ctrl+C` no terminal onde o `docker-compose up` está a correr. Para remover os contêineres e redes (mas mantendo os dados do banco), use `docker-compose down`. Para remover contêineres, redes e os dados do banco (volume), use `docker-compose down -v` (use com cuidado!).

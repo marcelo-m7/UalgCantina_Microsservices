@@ -1,9 +1,5 @@
-# .dockerignore
-
 node_modules
 .next
-.vscode
-.DS_Store
+.cache
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+.DS_Store

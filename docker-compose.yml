@@ -65,12 +65,16 @@ services:
     build:
       context: ./services/web
       dockerfile: Dockerfile
-    container_name: app_web
-    ports:
-      - "3000:3000"
+    container_name: cantina_web
     env_file: .env
+    environment:
+      PORT: 3000
+      # Aponta para a API local
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "8000:3000"
     depends_on:
-      - api                               # arranca depois da API
+      - api
 
 # ─────────────────────────────────  VOLUMES  ─────────────────────────────── #
 volumes:
