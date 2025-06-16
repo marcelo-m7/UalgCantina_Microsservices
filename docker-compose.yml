@@ -47,34 +47,34 @@ services:
       db:
         condition: service_healthy        # só arranca quando MySQL estiver OK
 
-# ────────────────────────────────────  API  ───────────────────────────────── #
-  api:
-    build:
-      context: ./services/api
-      dockerfile: Dockerfile
-    container_name: app_api
-    ports:
-      - "8000:8000"
-    env_file: .env
-    depends_on:
-      db:
-        condition: service_healthy
+# # ────────────────────────────────────  API  ───────────────────────────────── #
+#   api:
+#     build:
+#       context: ./services/api
+#       dockerfile: Dockerfile
+#     container_name: app_api
+#     ports:
+#       - "8000:8000"
+#     env_file: .env
+#     depends_on:
+#       db:
+#         condition: service_healthy
 
-# ────────────────────────────────────  WEB  ──────────────────────────────── #
-  web:
-    build:
-      context: ./services/web
-      dockerfile: Dockerfile
-    container_name: cantina_web
-    env_file: .env
-    environment:
-      PORT: 3000
-      # Aponta para a API local
-      NEXT_PUBLIC_API_URL: http://localhost:8000
-    ports:
-      - "8000:3000"
-    depends_on:
-      - api
+# # ────────────────────────────────────  WEB  ──────────────────────────────── #
+#   web:
+#     build:
+#       context: ./services/web
+#       dockerfile: Dockerfile
+#     container_name: cantina_web
+#     env_file: .env
+#     environment:
+#       PORT: 3000
+#       # Aponta para a API local
+#       NEXT_PUBLIC_API_URL: http://localhost:8000
+#     ports:
+#       - "8000:3000"
+#     depends_on:
+#       - api
 
 # ─────────────────────────────────  VOLUMES  ─────────────────────────────── #
 volumes:

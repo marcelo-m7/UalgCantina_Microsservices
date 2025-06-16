@@ -9,7 +9,7 @@ COPY ./app /usr/src/app
 RUN npm install
 
 # Expõe a porta usada pelo Next.js
-EXPOSE 8000
+EXPOSE 8080
 
 # Inicia o servidor em desenvolvimento
 # CMD ["npm", "run", "dev"]

@@ -123,4 +123,7 @@ docker build . -t us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcantina/ual
 docker push us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcantina/ualg-web:latest
 
 gcloud run deploy ualgcantina-web  --image us-central1-docker.pkg.dev/ualg-cantina-a79433/ualgcantina/ualg-web:latest --region us-central1  --platform managed  --allow-unauthenticated  --set-env-vars NEXT_PUBLIC_API_URL=https://ualgcantina-api-847590019108.europe-west1.run.app/
+
+cloud-sql-proxy.exe "ualg-cantina-a79433:us-east1:cantinacas-tdb" --port 3306
+
 ```
