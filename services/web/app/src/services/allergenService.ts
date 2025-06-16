@@ -7,7 +7,7 @@ export const getAllergens = async (): Promise<Allergen[]> => {
   return response.data;
 };
 
-export const createAllergen = async (allergenData: Omit<Allergen, 'id'>): Promise<Allergen> => {
+export const createAllergen = async (allergenData: Allergen): Promise<Allergen> => {
   const response = await apiClient.post('/allergens/', allergenData);
   return response.data;
 };
