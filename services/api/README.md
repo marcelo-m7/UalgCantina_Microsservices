@@ -92,7 +92,7 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
    ```
 
 3. **Acesse a documentação interativa (Swagger UI):**
-   Abra no navegador: `http://localhost:8000/docs`
+   Abra no navegador: `https://ualgcantina-api-847590019108.europe-west1.run.app/docs`
 
 ## Endpoints da API
 

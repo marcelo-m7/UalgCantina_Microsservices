@@ -12,7 +12,7 @@
       cp .env.example .env
    ```
 4. Executar `docker-compose up --build` para criar e iniciar os containers.
-5. Aceder ao frontend em `http://localhost:3000` e à documentação da API em `http://localhost:8000/docs`.
+5. Aceder ao frontend em `http://localhost:3000` e à documentação da API em `https://ualgcantina-api-847590019108.europe-west1.run.app/docs`.
 
 ## Considerações Finais
 
