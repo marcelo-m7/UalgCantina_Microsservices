@@ -106,7 +106,7 @@ Este comando irá construir as imagens Docker para cada serviço (frontend, back
 
 4.  **Acessar a Aplicação:**
 
-    *   **Frontend:** Abra o navegador em `http://localhost:3000`. Você deverá ver a interface do utilizador (se o frontend já tiver sido implementado).
+    *   **Frontend:** Abra o navegador em `http://localhost:8000`. Você deverá ver a interface do utilizador (se o frontend já tiver sido implementado).
     *   **API Docs (Swagger UI):** A documentação interativa da API FastAPI está disponível em `http://localhost:8000/docs`. Você pode explorar os endpoints e testá-los diretamente no navegador.
     *   **Banco de Dados:** O banco de dados MySQL estará rodando e acessível internamente pelos contêineres via hostname `db` na porta 3306. Externamente (se desejar conectar com um cliente SQL), pode usar `localhost:3306` com as credenciais definidas no `.env`.
 

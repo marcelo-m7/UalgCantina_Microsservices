@@ -10,7 +10,7 @@ COPY ./app /usr/src/app
 RUN npm install
 
 # Expõe a porta usada pelo Next.js
-EXPOSE 3000
+EXPOSE 8000
 
 # Inicia o servidor em produção
 # CMD ["npm", "run", "dev"]
